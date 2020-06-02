@@ -1,0 +1,13 @@
+.main-logo{
+    position: absolute;
+    left: 5%;
+    margin-top: 2%;
+
+    font-family: Calibri;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 36px;
+    line-height: 43px;
+
+    color: #FFFFFF;
+}

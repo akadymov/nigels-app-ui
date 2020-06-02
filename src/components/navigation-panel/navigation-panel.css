@@ -1,0 +1,22 @@
+.navigation-panel{
+    position: absolute;
+    right: 0%;
+    left: 30%;
+    height: 70px;
+}
+
+.nav-items-table{
+    table-layout: initial;
+    width:100%;
+}
+
+.nav-item-cell{
+    width: 20%;
+    font-family: Alegreya Sans SC;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 29px;
+    color:#FFFFFF;
+    padding: 3%;
+}

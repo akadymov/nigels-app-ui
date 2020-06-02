@@ -1,0 +1,11 @@
+.app-header{
+    position: relative;
+    height: 90px;
+}
+.header-underline{
+    position: absolute;
+    bottom: 5%;
+    left: 2%;
+    right: 2%;
+    border: 1px solid #FFFFFF;
+}

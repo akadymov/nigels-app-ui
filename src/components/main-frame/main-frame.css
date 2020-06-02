@@ -1,0 +1,21 @@
+.main-frame {
+    position: absolute;
+    width: 1100px;
+    height: 750px;
+    left: 170px;
+    border-radius: 10px;
+    top: 30px;
+}
+
+.background-image{
+    background: url(main-background.jpg), #C4C4C4;
+    mix-blend-mode: darken;
+    opacity: 0.2;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  
+  .background-color {
+    background: #4EA470;
+  }
+  
