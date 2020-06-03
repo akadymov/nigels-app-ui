@@ -1,0 +1,45 @@
+.active-frame{
+    width: 300px;
+    height: 450px;
+    clear:both;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    margin-top: -265px;
+    margin-left: -150px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.registration-form{
+    text-align: center;
+    margin-top: 8px;
+}
+
+.lang-label{
+    background-repeat: no-repeat;
+    background-position-x: center;
+    margin-left: 10px;
+    width: 130px;
+    height: 25px;
+    display: inline-block;
+    text-align: start;
+}
+
+.lang-label[lang=en]{
+    background-image: url(./en.png);
+}
+
+.lang-label[lang=ru]{
+    background-image: url(./ru.png);
+}
+
+.form-label{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+
+    color: #929292;
+}
