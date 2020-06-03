@@ -1,3 +1,4 @@
 .navigation-item {
-    text-align: center
+    text-align: center;
+    z-index: 1;
 }

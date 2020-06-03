@@ -1,0 +1,75 @@
+.input-field{
+    text-align: center;
+    width: 250px;
+    font-family: Arimo;
+
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.input-field[type=text] {
+    height: 30px;
+    margin-top: 25px;
+
+    background: #FFFFFF;
+    border: 1px solid #929292;
+
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+
+    color: #929292;
+}
+
+.input-field[id=username]{
+    background-image: url(./user-outlined.png);
+    background-repeat: no-repeat;
+    background-position: 13px;
+}
+
+.input-field[id=password] {
+    height: 30px;
+    margin-top: 25px;
+
+    background: #FFFFFF;
+    border: 1px solid #929292;
+
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+
+    color: #929292;
+
+    background-image: url(./lock-outlined.png);
+    background-repeat: no-repeat;
+    background-position: 13px;
+}
+
+.input-field:focus{
+    border: 1px solid #308552;
+    color: black;
+    outline: none !important;
+}
+
+.error{
+    border: 1px solid #FF0000;
+    color: #FF0000;
+}
+
+.input-field[type=submit]{
+    height: 40px;
+    margin-top: 35px;
+
+    background: #308552;
+
+    border: none;
+
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+
+    color: #FFFFFF;
+}

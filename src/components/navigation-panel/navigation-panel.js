@@ -3,13 +3,13 @@ import React from 'react';
 import './navigation-panel.css'
 import NavigationItem from '../navigation-item';
 
-const pagesList = [
-    { label: 'About' },
-    { label: 'Lobby' },
-    { label: 'Leaderboard' },
-    { label: 'Feedback' },
-    { label: 'Sign In', altlabel: 'Sign Out' }
-]
+/*const pagesList = [
+    { label: 'About' , location:'' },
+    { label: 'Lobby' , location:''  },
+    { label: 'Leaderboard' , location:''  },
+    { label: 'Feedback' , location:''  },
+    { label: 'Sign In' , location:'/signin' , altlabel: 'Sign Out' }
+]*/
 
 const NavigationPanel = () => {
     return (
@@ -29,7 +29,7 @@ const NavigationPanel = () => {
                         <NavigationItem label ="Feedback"></NavigationItem>
                     </td>
                     <td className="nav-item-cell">
-                        <NavigationItem label ="Sign In"></NavigationItem>
+                        <NavigationItem label ="Sign in" href="/signin"></NavigationItem>
                     </td>
                 </tr>
             </table>
