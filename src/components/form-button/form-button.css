@@ -55,6 +55,10 @@
     line-height: 21px;
     
     color: #929292;
+
+    background-image: url(./google.png);
+    background-repeat: no-repeat;
+    background-position: 11px;
 }
 
 .form-button[type=facebook]{
@@ -71,4 +75,8 @@
     line-height: 21px;
     
     color: #395185;
+
+    background-image: url(./facebook.png);
+    background-repeat: no-repeat;
+    background-position: 13px;
 }

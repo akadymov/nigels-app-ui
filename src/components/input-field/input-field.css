@@ -22,7 +22,13 @@
     color: #929292;
 }
 
-.input-field[type=password] {
+.input-field[id=username]{
+    background-image: url(./user-outlined.png);
+    background-repeat: no-repeat;
+    background-position: 13px;
+}
+
+.input-field[id=password] {
     height: 30px;
     margin-top: 25px;
 
@@ -35,6 +41,10 @@
     line-height: 21px;
 
     color: #929292;
+
+    background-image: url(./lock-outlined.png);
+    background-repeat: no-repeat;
+    background-position: 13px;
 }
 
 .input-field:focus{

@@ -1,3 +1,17 @@
+.active-frame{
+    width: 300px;
+    height: 400px;
+    clear:both;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    margin-top: -265px;
+    margin-left: -150px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    text-align: center;
+}
+
 .login-form{
     text-align: center;
     margin-top: 8px;
