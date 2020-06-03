@@ -1,0 +1,74 @@
+.form-button{
+    text-align: center;
+    font-family: Arimo;
+
+    box-sizing: border-box;
+
+    font-style: normal;
+
+    cursor: pointer;
+}
+
+.form-button[type=submit]{
+    margin-top: 35px;
+    height: 40px;
+    width: 250px;
+
+    background: #308552;
+    border: none;
+    border-radius: 5px;
+
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+
+    color: #FFFFFF;
+}
+
+.form-button[type=secondary]{
+    margin-top: 14px;
+    height: 30px;
+    width: 200px;
+
+    background: #FFFFFF;
+    border: 1px solid #308552;
+    border-radius: 3px;
+
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+    
+    color: #308552;
+}
+
+.form-button[type=google]{
+    margin-top: 14px;
+    height: 30px;
+    width: 200px;
+
+    background: #FFFFFF;
+    border: 1px solid #929292;
+    border-radius: 3px;
+
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    
+    color: #929292;
+}
+
+.form-button[type=facebook]{
+    margin-top: 14px;
+    height: 30px;
+    width: 200px;
+
+    background: #FFFFFF;
+    border: 1px solid #395185;
+    border-radius: 3px;
+
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+    
+    color: #395185;
+}

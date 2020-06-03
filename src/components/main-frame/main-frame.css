@@ -1,21 +1,32 @@
 .main-frame {
-    position: absolute;
     width: 1100px;
     height: 750px;
     left: 170px;
     border-radius: 10px;
     top: 30px;
 }
+  
+.content {
+  position: absolute;
+  display: block;
+  z-index: 1;
+}
 
 .background-image{
-    background: url(main-background.jpg), #C4C4C4;
+    content:"";
+    background: url(main-background.jpg);
     mix-blend-mode: darken;
-    opacity: 0.2;
+    opacity: 0.15;
     background-repeat: no-repeat;
     background-size: contain;
+    z-index: 0;
+    position: absolute;
   }
   
   .background-color {
-    background: #4EA470;
+    background-color: rgb(78,164,98, 1);
+    position: absolute;
+    display: block;
+    z-index: -1;
   }
   
