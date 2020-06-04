@@ -60,7 +60,6 @@
     display: inline-block;
     position: absolute;
 }
-
 .input-field:focus{
     border: 1px solid #308552;
     color: black;
