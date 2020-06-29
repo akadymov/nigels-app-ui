@@ -14,11 +14,14 @@ export default class RegistrationForm extends React.Component{
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleRepeatPasswordChange = this.handleRepeatPasswordChange.bind(this);
+        this.handleErrorResponse = this.handleErrorResponse.bind(this);
         this.state = {
             email:'',
             password:'',
             repeatPassword:'',
-            username:''
+            username:'',
+            errorField: '',
+            errorMessage: ''
       };
     }
 
@@ -32,6 +35,9 @@ export default class RegistrationForm extends React.Component{
             this.state.repeatPassword
         )
         .then((body) => { 
+            if(body.error) {
+                this.handleErrorResponse(body)
+            }
             console.log(body);
         });
     };
@@ -52,6 +58,14 @@ export default class RegistrationForm extends React.Component{
         this.setState({email: e.target.value})
     };
 
+    handleErrorResponse(body) {
+        this.setState({
+            errorField: body.incorrect_fields[0],
+            errorMessage: body.error
+        })
+        console.log(this.state.errorField, this.state.errorMessage)
+    }
+
     render() {
         return (
                 <div>
@@ -60,10 +74,12 @@ export default class RegistrationForm extends React.Component{
                             <InputField 
                                 type="text" 
                                 id="username" 
-                                name ="username" 
+                                name="username" 
                                 placeholder="Username" 
                                 value={this.state.username}
                                 onChange={this.handleUsernameChange}
+                                errorField={this.state.errorField}
+                                errorMessage={this.state.errorMessage}
                             ></InputField>
                             <InputField 
                                 type="text" 
@@ -72,6 +88,8 @@ export default class RegistrationForm extends React.Component{
                                 placeholder="Email"
                                 value={this.state.email}
                                 onChange={this.handleEmailChange}
+                                errorField={this.state.errorField}
+                                errorMessage={this.errorMessage}
                             ></InputField>
                             <InputField 
                                 type="password" 
@@ -80,6 +98,8 @@ export default class RegistrationForm extends React.Component{
                                 placeholder="Password"
                                 value={this.state.password}
                                 onChange={this.handlePasswordChange}
+                                errorField={this.state.errorField}
+                                errorMessage={this.state.errorMessage}
                             ></InputField>
                             <InputField 
                                 type="password" 
@@ -87,7 +107,9 @@ export default class RegistrationForm extends React.Component{
                                 name ="repeat-password" 
                                 placeholder="Repeat password"
                                 value={this.state.repeatPassword}
-                                onChange={this.handleRepeatPasswordChange}    
+                                onChange={this.handleRepeatPasswordChange}
+                                errorField={this.state.errorField}
+                                errorMessage={this.state.errorMessage}
                             ></InputField>
                             <p className="form-label">Preferred language</p>
                             <div className="lang-label" lang="en"><InputField type="radio" id="preferred-lang" name="preferred-lang" lang="en"></InputField></div>
