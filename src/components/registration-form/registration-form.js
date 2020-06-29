@@ -87,9 +87,9 @@ export default class RegistrationForm extends React.Component{
                                 name ="email" 
                                 placeholder="Email"
                                 value={this.state.email}
-                                onChange={this.handleEmailChange}
+                                onChange={this.handleEmailChange}   
                                 errorField={this.state.errorField}
-                                errorMessage={this.errorMessage}
+                                errorMessage={this.state.errorMessage}
                             ></InputField>
                             <InputField 
                                 type="password" 
