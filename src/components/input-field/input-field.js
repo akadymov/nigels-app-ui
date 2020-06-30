@@ -2,9 +2,9 @@ import React from 'react';
 
 import './input-field.css'
 
-const InputField = ({type, id, name, placeholder, value, onChange, errorField, errorMessage}) => {
+const InputField = ({type, id, name, placeholder, value, onChange, errorMessage}) => {
 
-    const status = id==errorField ? 'error' : 'active'
+    const status = errorMessage=='' ? 'active' : 'error'
 
     var errorDiv = ''
     if (status=='error') {

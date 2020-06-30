@@ -28,13 +28,21 @@
     background-position: 13px;
 }
 
+.input-field[id=username]:focus{
+    background-image: url(./user-outlined-active.png);
+}
+
 .input-field[id=email]{
     background-image: url(./email-outlined.png);
     background-repeat: no-repeat;
     background-position: 13px;
 }
 
-.input-field[id*=password] {
+.input-field[id=email]:focus{
+    background-image: url(./email-outlined-active.png);
+}
+
+.input-field[type=password] {
     height: 30px;
     margin-top: 25px;
 
@@ -51,6 +59,10 @@
     background-image: url(./lock-outlined.png);
     background-repeat: no-repeat;
     background-position: 13px;
+}
+
+.input-field[type=password]:focus{
+    background-image: url(./lock-outlined-active.png);
 }
 
 .input-field[type=radio]{

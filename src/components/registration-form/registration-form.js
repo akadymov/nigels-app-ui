@@ -20,8 +20,13 @@ export default class RegistrationForm extends React.Component{
             password:'',
             repeatPassword:'',
             username:'',
-            errorField: '',
-            errorMessage: ''
+            errors: [],
+            textFieldsList: [
+                {id:"username", name:"username", type: "text", placeholder: "Username", onChange: this.handleUsernameChange, errorMessage: "", value: ""},
+                {id:"email", name:"email", type: "text", placeholder: "Email", onChange: this.handleEmailChange, errorMessage: "", value: ""},
+                {id:"password", name:"password", type: "password", placeholder: "Password", onChange: this.handlePasswordChange, errorMessage: "", value: ""},
+                {id:"repeatPassword", name:"repeatPassword", type: "password", placeholder: "Repeat password", onChange: this.handleRepeatPasswordChange, errorMessage: "", value: ""},
+            ]
       };
     }
 
@@ -34,11 +39,11 @@ export default class RegistrationForm extends React.Component{
             this.state.password, 
             this.state.repeatPassword
         )
-        .then((body) => { 
-            if(body.error) {
+        .then((body) => {
+            if(body.errors) {
                 this.handleErrorResponse(body)
+                console.log('error!')
             }
-            console.log(body);
         });
     };
 
@@ -59,58 +64,34 @@ export default class RegistrationForm extends React.Component{
     };
 
     handleErrorResponse(body) {
-        this.setState({
-            errorField: body.incorrect_fields[0],
-            errorMessage: body.error
+        let textFieldsListUpdated = [...this.state.textFieldsList]
+        textFieldsListUpdated.forEach(f => {
+            f.errorMessage="";
         })
-        console.log(this.state.errorField, this.state.errorMessage)
+        body.errors.forEach(er => {
+            var elementsIndex = this.state.textFieldsList.findIndex(element => element.name == er.field )
+            textFieldsListUpdated[elementsIndex] = {...textFieldsListUpdated[elementsIndex], errorMessage: er.message}
+        });
+        this.setState({textFieldsList: textFieldsListUpdated});
+        console.log(this.state.textFieldsList)
     }
 
     render() {
+
         return (
                 <div>
                     <div className="active-frame">
                         <div className="registration-form">
-                            <InputField 
-                                type="text" 
-                                id="username" 
-                                name="username" 
-                                placeholder="Username" 
-                                value={this.state.username}
-                                onChange={this.handleUsernameChange}
-                                errorField={this.state.errorField}
-                                errorMessage={this.state.errorMessage}
-                            ></InputField>
-                            <InputField 
-                                type="text" 
-                                id="email" 
-                                name ="email" 
-                                placeholder="Email"
-                                value={this.state.email}
-                                onChange={this.handleEmailChange}   
-                                errorField={this.state.errorField}
-                                errorMessage={this.state.errorMessage}
-                            ></InputField>
-                            <InputField 
-                                type="password" 
-                                id="password" 
-                                name ="password" 
-                                placeholder="Password"
-                                value={this.state.password}
-                                onChange={this.handlePasswordChange}
-                                errorField={this.state.errorField}
-                                errorMessage={this.state.errorMessage}
-                            ></InputField>
-                            <InputField 
-                                type="password" 
-                                id="repeat-password" 
-                                name ="repeat-password" 
-                                placeholder="Repeat password"
-                                value={this.state.repeatPassword}
-                                onChange={this.handleRepeatPasswordChange}
-                                errorField={this.state.errorField}
-                                errorMessage={this.state.errorMessage}
-                            ></InputField>
+                            {this.state.textFieldsList.map(field => {
+                                return <InputField
+                                    type={field.type}
+                                    id={field.name}
+                                    name={field.name}
+                                    placeholder={field.placeholder}
+                                    onChange={field.onChange}
+                                    errorMessage={field.errorMessage}
+                                ></InputField>
+                            })}
                             <p className="form-label">Preferred language</p>
                             <div className="lang-label" lang="en"><InputField type="radio" id="preferred-lang" name="preferred-lang" lang="en"></InputField></div>
                             <div className="lang-label" lang="ru"><InputField type="radio" id="preferred-lang" name="preferred-lang" lang="ru"></InputField></div>
