@@ -78,21 +78,21 @@
     outline: none !important;
 }
 
-.input-field.error{
+.input-field.error:not(:focus){
     border: 1px solid #FF0000;
     color: #FF0000;
     /*filter: invert(22%) sepia(94%) saturate(7408%) hue-rotate(358deg) brightness(120%) contrast(115%);*/
 }
 
-.input-field.error[id*=password]{
+.input-field.error[id*=password]:not(:focus){
     background-image: url(./lock-outlined-error.png);
 }
 
-.input-field.error[id*=email]{
+.input-field.error[id*=email]:not(:focus){
     background-image: url(./email-outlined-error.png);
 }
 
-.input-field.error[id*=username]{
+.input-field.error[id*=username]:not(:focus){
     background-image: url(./user-outlined-error.png);
 }
 

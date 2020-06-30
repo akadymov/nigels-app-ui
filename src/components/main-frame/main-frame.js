@@ -7,6 +7,7 @@ import { Switch, Route } from 'react-router-dom';
 import RegistrationForm from '../registration-form';
 import SuccessfullRegistration from '../successfull-registration';
 
+
 const MainFrame = () => {
     return (
         <div>
