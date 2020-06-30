@@ -2,8 +2,14 @@ import React from 'react';
 
 import './navigation-item.css'
 
-const NavigationItem = ({label, href}) => {
-    return <div className="navigation-item" href={href}>{label}</div>
-}
+export default class NavigationItem extends React.Component{
 
-export default NavigationItem;
+    render() {
+        return (
+            <div className="navigation-item">
+                <a className="navigation-href" href={this.props.href}>{this.props.label}</a>
+            </div>
+        );
+    }
+    
+}

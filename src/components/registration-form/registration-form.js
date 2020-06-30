@@ -20,7 +20,6 @@ export default class RegistrationForm extends React.Component{
             password:'',
             repeatPassword:'',
             username:'',
-            errors: [],
             textFieldsList: [
                 {id:"username", name:"username", type: "text", placeholder: "Username", onChange: this.handleUsernameChange, errorMessage: "", value: ""},
                 {id:"email", name:"email", type: "text", placeholder: "Email", onChange: this.handleEmailChange, errorMessage: "", value: ""},
@@ -42,7 +41,8 @@ export default class RegistrationForm extends React.Component{
         .then((body) => {
             if(body.errors) {
                 this.handleErrorResponse(body)
-                console.log('error!')
+            } else {
+                window.location.replace('/registration-succeed/' + this.state.username);
             }
         });
     };
@@ -69,7 +69,7 @@ export default class RegistrationForm extends React.Component{
             f.errorMessage="";
         })
         body.errors.forEach(er => {
-            var elementsIndex = this.state.textFieldsList.findIndex(element => element.name == er.field )
+            var elementsIndex = this.state.textFieldsList.findIndex(element => element.name === er.field )
             textFieldsListUpdated[elementsIndex] = {...textFieldsListUpdated[elementsIndex], errorMessage: er.message}
         });
         this.setState({textFieldsList: textFieldsListUpdated});
@@ -103,6 +103,7 @@ export default class RegistrationForm extends React.Component{
                             <FormButton 
                                 type="secondary" 
                                 value="Sign in"
+                                onClick={() => this.props.history.push('/signin')}
                             ></FormButton>
                         </div>
                     </div>

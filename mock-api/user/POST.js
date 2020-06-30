@@ -27,7 +27,9 @@ module.exports = (req, res) => {
     if (password !== password2) {
       errors.push({
         field:"repeatPassword",
-        message:"Password confirmation does not match!"
+        message:"Password confirmation does not match!",
+        password: password,
+        repeatPassword: password2
       });
     };
 

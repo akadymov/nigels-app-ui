@@ -5,6 +5,7 @@ import AppHeader from '../app-header';
 import LoginForm from '../login-form';
 import { Switch, Route } from 'react-router-dom';
 import RegistrationForm from '../registration-form';
+import SuccessfullRegistration from '../successfull-registration';
 
 const MainFrame = () => {
     return (
@@ -14,6 +15,7 @@ const MainFrame = () => {
                 <Switch>
                     <Route exact path="/signin" component={LoginForm}></Route>
                     <Route exact path="/register" component={RegistrationForm}></Route>
+                    <Route exact path="/registration-succeed/:username" component={SuccessfullRegistration}></Route>
                     <Route exact path="/" component={LoginForm}></Route>
                 </Switch>
             </div>
