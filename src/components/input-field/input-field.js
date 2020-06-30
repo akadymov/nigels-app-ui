@@ -2,7 +2,7 @@ import React from 'react';
 
 import './input-field.css'
 
-const InputField = ({type, id, name, placeholder, value, onChange, errorMessage}) => {
+const InputField = ({type, id, name, placeholder, value, onChange, errorMessage, checked}) => {
 
     const status = errorMessage==='' ? 'active' : 'error'
 
@@ -21,6 +21,7 @@ const InputField = ({type, id, name, placeholder, value, onChange, errorMessage}
                 placeholder={placeholder} 
                 value={value} 
                 onChange={onChange}
+                checked={checked}
             ></input>
             {errorDiv}
         </div>

@@ -40,12 +40,13 @@ export default class NaegelsApi {
         return await res.json();
     };
 
-    registerUser = async (email, username, password, repeatPassword) => {
+    registerUser = async (email, username, password, repeatPassword, preferredLang) => {
         const data = {
             email: email,
             username: username,
             password: password,
-            repeatPassword: repeatPassword
+            repeatPassword: repeatPassword,
+            preferredLang: preferredLang
         };
         const res = await this.apiCall('/user', 'POST', data);
         return res

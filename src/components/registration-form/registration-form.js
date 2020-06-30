@@ -20,11 +20,16 @@ export default class RegistrationForm extends React.Component{
             password:'',
             repeatPassword:'',
             username:'',
+            preferredLang: '',
             textFieldsList: [
                 {id:"username", name:"username", type: "text", placeholder: "Username", onChange: this.handleUsernameChange, errorMessage: "", value: ""},
                 {id:"email", name:"email", type: "text", placeholder: "Email", onChange: this.handleEmailChange, errorMessage: "", value: ""},
                 {id:"password", name:"password", type: "password", placeholder: "Password", onChange: this.handlePasswordChange, errorMessage: "", value: ""},
-                {id:"repeatPassword", name:"repeatPassword", type: "password", placeholder: "Repeat password", onChange: this.handleRepeatPasswordChange, errorMessage: "", value: ""},
+                {id:"repeatPassword", name:"repeatPassword", type: "password", placeholder: "Repeat password", onChange: this.handleRepeatPasswordChange, errorMessage: "", value: ""}
+            ],
+            languages: [
+                {type:"radio", id:"preferred-lang", name:"preferred-lang", lang:"en", errorMessage:""},
+                {type:"radio", id:"preferred-lang", name:"preferred-lang", lang:"ru", errorMessage:""}
             ]
       };
     }
@@ -36,7 +41,8 @@ export default class RegistrationForm extends React.Component{
             this.state.email, 
             this.state.username, 
             this.state.password, 
-            this.state.repeatPassword
+            this.state.repeatPassword,
+            this.state.preferredLang
         )
         .then((body) => {
             if(body.errors) {
@@ -63,6 +69,10 @@ export default class RegistrationForm extends React.Component{
         this.setState({email: e.target.value})
     };
 
+    handleLangChange=(e) => {
+        this.setState({preferredLang: e.target.value})
+    };
+
     handleErrorResponse(body) {
         let textFieldsListUpdated = [...this.state.textFieldsList]
         textFieldsListUpdated.forEach(f => {
@@ -73,7 +83,6 @@ export default class RegistrationForm extends React.Component{
             textFieldsListUpdated[elementsIndex] = {...textFieldsListUpdated[elementsIndex], errorMessage: er.message}
         });
         this.setState({textFieldsList: textFieldsListUpdated});
-        console.log(this.state.textFieldsList)
     }
 
     render() {
@@ -93,8 +102,20 @@ export default class RegistrationForm extends React.Component{
                                 ></InputField>
                             })}
                             <p className="form-label">Preferred language</p>
-                            <div className="lang-label" lang="en"><InputField type="radio" id="preferred-lang" name="preferred-lang" lang="en"></InputField></div>
-                            <div className="lang-label" lang="ru"><InputField type="radio" id="preferred-lang" name="preferred-lang" lang="ru"></InputField></div>
+                            {this.state.languages.map(lang => {
+                                return <div className="lang-label" lang={lang.lang}>
+                                    <InputField
+                                        type={lang.type}
+                                        id={lang.id}
+                                        name={lang.name}
+                                        lang={lang.lang}
+                                        errorMessage={lang.errorMessage}
+                                        checked={this.state.preferredLang === lang.lang}
+                                        onChange={this.handleLangChange}
+                                        value={lang.lang}
+                                    ></InputField>
+                                </div>  
+                            })}
                             <FormButton 
                                 value="Register"
                                 type="Submit"
