@@ -2,63 +2,61 @@ module.exports = (req, res) => {
     const userEmail = req.body.email;
     const username = req.body.username;
     const password = req.body.password;
-    const password2 = req.body["repeat-password"];
+    const password2 = req.body.repeatPassword;
     const lang = "en"
-    if (req.body.preferred-lang) {
-      lang = req.body.preferred-lang
+    if (req.body.preferredLang) {
+      lang = req.body.preferredLang
     }
+
+    const errors = [];
   
     if (userEmail === 'gsukhy@gmail.com') {
-      return res.status(400).json({
-        error: "User with email " + userEmail + " already exists!",
-        incorrect_fields: [
-            "email"
-        ]
+      errors.push({
+        field:"email",
+        message:"Email " + userEmail + " is unavailable!"
       });
     };
   
     if (username === 'gsukhy') {
-      return res.status(400).json({
-        error: "User with username " + username + " already exists!",
-        incorrect_fields: [
-            "username"
-        ]
+      errors.push({
+        field:"username",
+        message:"User " + username + " already exists!"
       });
     };
   
     if (password !== password2) {
-      return res.status(400).json({
-        error: "Password confirmation is invalid!",
-        incorrect_fields: [
-            "repeat-password"
-        ]
+      errors.push({
+        field:"repeatPassword",
+        message:"Password confirmation does not match!",
+        password: password,
+        repeatPassword: password2
       });
     };
 
     if (password.length < 5) {
-        return res.status(400).json({
-            error: "Password does not satisfy security requirements!",
-            incorrect_fields: [
-                "password"
-            ]
-        })
+      errors.push({
+        field:"password",
+        message:"Password does not meet security requirements!"
+      });
     };
 
     if (lang != "en" && lang != "ru") {
-        return res.status(400).json({
-            error: "Language sdf is not supported!",
-            incorrect_fields: [
-                "preferred-lang"
-            ]
-        })
+      errors.push({
+        field:"preferredLang",
+        message:"Language " + lang + " is not supported!"
+      });
     };
+
+    if(errors.length>0) {
+      return res.status(400).json({errors})
+    }
   
     return res.status(201).json({
       email: req.body.email,
       username: req.body.username,
-      last_seen: Date.now(),
+      lastSeen: Date.now(),
       registered: Date.now(),
-      preferred_lang: lang,
-      about_me: null
+      preferredLang: lang,
+      aboutMe: null
     });
   };

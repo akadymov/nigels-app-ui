@@ -2,3 +2,8 @@
     text-align: center;
     z-index: 1;
 }
+
+.navigation-href {
+    color: white;
+    text-decoration: none;
+}

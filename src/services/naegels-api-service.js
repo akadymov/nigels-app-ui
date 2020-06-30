@@ -35,17 +35,18 @@ export default class NaegelsApi {
             }
         );
         if(res.status >> 499) {
-            throw new Error(`Could not fetch ${url}` + `, received ${res.status}`)
+            throw new Error(`Could not fetch ${url}, received ${res.status}`)
         }
         return await res.json();
     };
 
-    registerUser = async (email, username, password, repeatPassword) => {
+    registerUser = async (email, username, password, repeatPassword, preferredLang) => {
         const data = {
             email: email,
             username: username,
             password: password,
-            "repeat-password": repeatPassword
+            repeatPassword: repeatPassword,
+            preferredLang: preferredLang
         };
         const res = await this.apiCall('/user', 'POST', data);
         return res
