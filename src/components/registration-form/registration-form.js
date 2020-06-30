@@ -15,6 +15,7 @@ export default class RegistrationForm extends React.Component{
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleRepeatPasswordChange = this.handleRepeatPasswordChange.bind(this);
         this.handleErrorResponse = this.handleErrorResponse.bind(this);
+        this.clearErrorMessage = this.clearErrorMessage.bind(this);
         this.state = {
             email:'',
             password:'',
@@ -73,7 +74,14 @@ export default class RegistrationForm extends React.Component{
         this.setState({preferredLang: e.target.value})
     };
 
-    handleErrorResponse(body) {
+    clearErrorMessage=(e) => {
+        let textFieldsListUpdated = [...this.state.textFieldsList]
+        var elementsIndex = this.state.textFieldsList.findIndex(element => element.id === e.target.id )
+        textFieldsListUpdated[elementsIndex] = {...textFieldsListUpdated[elementsIndex], errorMessage: ""}
+        this.setState({textFieldsList: textFieldsListUpdated});
+    }
+
+    handleErrorResponse=(body) => {
         let textFieldsListUpdated = [...this.state.textFieldsList]
         textFieldsListUpdated.forEach(f => {
             f.errorMessage="";
@@ -99,6 +107,7 @@ export default class RegistrationForm extends React.Component{
                                     placeholder={field.placeholder}
                                     onChange={field.onChange}
                                     errorMessage={field.errorMessage}
+                                    onClick={this.clearErrorMessage}
                                 ></InputField>
                             })}
                             <p className="form-label">Preferred language</p>

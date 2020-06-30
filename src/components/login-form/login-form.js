@@ -13,6 +13,7 @@ export default class LoginForm extends React.Component{
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleErrorResponse = this.handleErrorResponse.bind(this);
+        this.clearErrorMessage = this.clearErrorMessage.bind(this);
         this.state = {
             textFieldsList: [
                 {id:"username", name:"username", type: "text", placeholder: "Username", onChange: this.handleUsernameChange, errorMessage: "", value: ""},
@@ -62,6 +63,13 @@ export default class LoginForm extends React.Component{
         this.setState({textFieldsList: textFieldsListUpdated});
     }
 
+    clearErrorMessage=(e) => {
+        let textFieldsListUpdated = [...this.state.textFieldsList]
+        var elementsIndex = this.state.textFieldsList.findIndex(element => element.id === e.target.id )
+        textFieldsListUpdated[elementsIndex] = {...textFieldsListUpdated[elementsIndex], errorMessage: ""}
+        this.setState({textFieldsList: textFieldsListUpdated});
+    }
+
     render() {
         return (
             <div>
@@ -75,6 +83,7 @@ export default class LoginForm extends React.Component{
                                     placeholder={field.placeholder}
                                     onChange={field.onChange}
                                     errorMessage={field.errorMessage}
+                                    onClick={this.clearErrorMessage}
                                 ></InputField>
                         })}
                         <FormButton type="Submit" value="Submit" onClick={this.SendLoginRequest}></FormButton>
