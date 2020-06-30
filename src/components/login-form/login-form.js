@@ -30,7 +30,6 @@ export default class LoginForm extends React.Component{
     
     NaegelsApi = new NaegelsApi();
     Cookies = new Cookies();
-
     CheckIfAlreadyLoggedIn = () => {
         const idToken = this.Cookies.get('idToken')
         if(idToken) {
