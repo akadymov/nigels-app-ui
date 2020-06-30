@@ -4,6 +4,7 @@ import './login-form.css'
 import InputField from '../input-field';
 import FormButton from '../form-button';
 import NaegelsApi from '../../services/naegels-api-service';
+import Cookies from 'universal-cookie';
 
 export default class LoginForm extends React.Component{
 
@@ -27,6 +28,7 @@ export default class LoginForm extends React.Component{
     };
     
     NaegelsApi = new NaegelsApi();
+    Cookies = new Cookies();
 
     SendLoginRequest = () => {
         this.NaegelsApi.login(
@@ -37,7 +39,8 @@ export default class LoginForm extends React.Component{
             if(body.errors) {
                 this.handleErrorResponse(body)
             } else {
-                window.location.replace('/registration-succeed/' + this.state.username);
+                this.Cookies.set('idToken', body.token, { path: '/' })
+                //window.location.replace('/lobby/' + this.state.username);
             }
         });
     };
