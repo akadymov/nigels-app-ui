@@ -1,0 +1,17 @@
+.lobby-frame{
+    width: 300px;
+    height: 180px;
+    clear:both;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    margin-top: -165px;
+    margin-left: -150px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.lobby-form{
+    text-align: center;
+}
