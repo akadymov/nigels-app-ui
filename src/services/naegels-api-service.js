@@ -52,5 +52,14 @@ export default class NaegelsApi {
         return res
     }
 
+    login = async (username, password) => {
+        const data = {
+            username: username,
+            password: password
+        };
+        const res = await this.apiCall('/user/token', 'POST', data);
+        return res
+    }
+
 };
 
