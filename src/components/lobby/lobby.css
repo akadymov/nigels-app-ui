@@ -1,17 +1,95 @@
 .lobby-frame{
-    width: 300px;
-    height: 180px;
-    clear:both;
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    margin-top: -165px;
-    margin-left: -150px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 1.5%;
+    height: 80%;
     background: #FFFFFF;
     border-radius: 10px;
+    position: absolute;
+}
+
+.lobby-header{
     text-align: center;
+    font-family: Arimo;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+
+    color: #308552;
 }
 
 .lobby-form{
     text-align: center;
+    position: absolute;
+    width: 90%;
+    height: 75%;
+    left: 5%;
+    top: 15%;
+
+    border: 1px solid #308552;
+    box-sizing: border-box;
+}
+
+.lobby-table-container{
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    height: 80%;
+    overflow-y:scroll;
+
+    outline: 1px solid #308552;
+    box-sizing: border-box;
+}
+
+.lobby-table{
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.lobby-table-header{
+    background: #2F3F35;
+    border: 1px #308552;
+    color: white;
+}
+
+.lobby-table-body{
+    color: #4EA470
+}
+
+tr:nth-child(even) {background-color: #E5E5E5;}
+
+.lobby-table-row{
+    height: 36px;
+}
+
+.lobby-table-cell{
+    padding-left: 10px;
+    border-top: 1px solid #929292;
+    text-align: left;
+}
+
+.lobby-management-container{
+    text-align: center;
+    top:80%;
+    width: 100%;
+    height: 20%;
+    position: absolute;
+    outline: 1px solid #308552;
+}
+
+.room-name-input-container{
+    position: absolute;
+    width:50%;
+}
+
+.create-room-button-container{
+    position: absolute;
+    width:50%;
+    left:50%;
+    margin-top: -2%;
 }
