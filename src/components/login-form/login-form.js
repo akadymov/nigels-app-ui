@@ -15,6 +15,7 @@ export default class LoginForm extends React.Component{
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleErrorResponse = this.handleErrorResponse.bind(this);
         this.clearErrorMessage = this.clearErrorMessage.bind(this);
+        this.CheckIfAlreadyLoggedIn = this.CheckIfAlreadyLoggedIn.bind(this);
         this.state = {
             textFieldsList: [
                 {id:"username", name:"username", type: "text", placeholder: "Username", onChange: this.handleUsernameChange, errorMessage: "", value: ""},
@@ -29,6 +30,12 @@ export default class LoginForm extends React.Component{
     
     NaegelsApi = new NaegelsApi();
     Cookies = new Cookies();
+    CheckIfAlreadyLoggedIn = () => {
+        const idToken = this.Cookies.get('idToken')
+        if(idToken) {
+            window.location.replace('/lobby/');
+        }
+    }
 
     SendLoginRequest = () => {
         this.NaegelsApi.login(
@@ -39,8 +46,11 @@ export default class LoginForm extends React.Component{
             if(body.errors) {
                 this.handleErrorResponse(body)
             } else {
-                this.Cookies.set('idToken', body.token, { path: '/' })
-                //window.location.replace('/lobby/' + this.state.username);
+                var currentDate = new Date(); 
+                var expiresIn = new Date(currentDate.getTime() + body.expiresIn * 1000)
+                this.Cookies.set('idToken', body.token, { path: '/' , expires: expiresIn})
+                this.Cookies.set('username', this.state.username, { path: '/' , expires: expiresIn})
+                window.location.replace('/lobby/');
             }
         });
     };
@@ -74,10 +84,14 @@ export default class LoginForm extends React.Component{
     }
 
     render() {
+
+        this.CheckIfAlreadyLoggedIn();
+
         return (
             <div>
                 <div className="active-frame">
                     <div className="login-form">
+                    {this.props.match.params.reason==='expired' ? <p className="errorDiv"><b>You have to sign in to access application</b></p> : ''}
                     {this.state.textFieldsList.map(field => {
                                 return <InputField
                                     type={field.type}

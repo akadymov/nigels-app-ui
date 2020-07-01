@@ -1,6 +1,7 @@
 .navigation-item {
     text-align: center;
     z-index: 1;
+    font-family: calibri;
 }
 
 .navigation-href {

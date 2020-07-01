@@ -23,21 +23,24 @@ export default class NaegelsApi {
         }
         
         const resourceLocation = `${this._apiHost}:${this._apiPort}${this._apiContext}${url}`
+        var req = {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        if(data !== ''){
+            req.body = JSON.stringify(data)
+        }
         const res = await fetch(
             resourceLocation,
-            {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }
+            req
         );
         if(res.status >> 499) {
             throw new Error(`Could not fetch ${url}, received ${res.status}`)
         }
-        return await res.json();
+        return await res.json({});
     };
 
     registerUser = async (email, username, password, repeatPassword, preferredLang) => {
@@ -50,7 +53,7 @@ export default class NaegelsApi {
         };
         const res = await this.apiCall('/user', 'POST', data);
         return res
-    }
+    };
 
     login = async (username, password) => {
         const data = {
@@ -59,7 +62,29 @@ export default class NaegelsApi {
         };
         const res = await this.apiCall('/user/token', 'POST', data);
         return res
-    }
+    };
+
+    getRooms = async () => {
+        const res = await this.apiCall('/room/all');
+        return res
+    };
+
+    createRoom = async (token, roomName) => {
+        const data = {
+            token: token,
+            roomName: roomName
+        };
+        const res = await this.apiCall('/room', 'POST', data);
+        return res
+    };
+
+    connectRoom = async (token, roomId) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/room/' + roomId + '/connect', 'POST', data);
+        return res
+    };
 
 };
 
