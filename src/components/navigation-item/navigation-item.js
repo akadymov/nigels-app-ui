@@ -7,7 +7,10 @@ export default class NavigationItem extends React.Component{
     render() {
         return (
             <div className="navigation-item">
-                <a className="navigation-href" href={this.props.href}>{this.props.label}</a>
+                <a 
+                    className="navigation-href" 
+                    href={this.props.location}
+                >{this.props.label}</a>
             </div>
         );
     }

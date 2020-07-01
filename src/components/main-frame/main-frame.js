@@ -18,6 +18,7 @@ const MainFrame = () => {
                 <AppHeader></AppHeader>
                 <Switch>
                     <Route path="/signin/:reason" component={LoginForm}></Route>
+                    <Route path="/signout" component={LoginForm}></Route>
                     <Route path="/register" component={RegistrationForm}></Route>
                     <Route path="/registration-succeed/:username" component={SuccessfullRegistration}></Route>
                     <Route path="/lobby" component={Lobby}></Route>
