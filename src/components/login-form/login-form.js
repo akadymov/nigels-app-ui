@@ -30,7 +30,6 @@ export default class LoginForm extends React.Component{
     
     NaegelsApi = new NaegelsApi();
     Cookies = new Cookies();
-    
     CheckIfAlreadyLoggedIn = () => {
         const idToken = this.Cookies.get('idToken')
         if(idToken) {
@@ -91,11 +90,11 @@ export default class LoginForm extends React.Component{
     }
 
     render() {
-
+      
         if(this.props.location.pathname === '/signout') {
             this.SignOut();
         }
-
+      
         this.CheckIfAlreadyLoggedIn();
 
         return (
