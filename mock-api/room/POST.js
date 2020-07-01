@@ -5,7 +5,10 @@ module.exports = (req, res) => {
     const errors = [];
   
     if (token === 'badToken') {
-      return res.status(401).json()
+      return res.status(401).json({
+        field:"token",
+        message:"Unauthorized!"
+      })
     }
   
     if (roomName === 'room') {

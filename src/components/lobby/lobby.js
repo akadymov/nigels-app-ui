@@ -47,6 +47,16 @@ export default class Lobby extends React.Component{
         });
     };
 
+    connectRoom = (e) => {
+        const roomId = e.target.id
+        this.NaegelsApi.connectRoom(this.Cookies.get('idToken'), roomId)
+        .then((body) => {
+            if(!body.errors){
+                console.log('Connected to room ' + roomId)
+            }
+        });
+    }
+
     handleNewRoomNameChange = (e) => {
         this.setState({ newRoomName: e.target.value })
     }
@@ -115,7 +125,10 @@ export default class Lobby extends React.Component{
                                         <td className="lobby-table-cell">
                                             <FormButton
                                                 type="small-submit" 
-                                                value="Join" 
+                                                value="Join"
+                                                id={room.roomId}
+                                                onClick={this.connectRoom}
+                                                disabled={room.status !== 'open'}
                                             >
                                             </FormButton>
                                         </td>
@@ -141,6 +154,7 @@ export default class Lobby extends React.Component{
                                      type="Submit" 
                                      value="Create new room"
                                      onClick={this.createNewRoom}
+                                     disabled={this.state.newRoomName==='' || this.state.newRoomError !== ''}
                                 >
                                 </FormButton>
                             </div>
