@@ -15,6 +15,16 @@
           "connect": "/api/v1/room/2/connect",
           "connectedUsers": 1,
           "created": "Thu, 25 Jun 2020 11:22:16 GMT",
+          "host": "gigaloff",
+          "roomId": 2,
+          "roomName": "Game for pros",
+          "status": "open"
+      },
+      {
+          "closed": null,
+          "connect": "/api/v1/room/2/connect",
+          "connectedUsers": 1,
+          "created": "Thu, 25 Jun 2020 11:22:16 GMT",
           "host": "kuznets",
           "roomId": 2,
           "roomName": "Тюкалинские бандиты",

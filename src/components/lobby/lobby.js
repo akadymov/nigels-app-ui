@@ -13,7 +13,9 @@ export default class Lobby extends React.Component{
         super(props);
         this.GetRoomsList = this.GetRoomsList.bind(this);
         this.state = {
-            rooms: []
+            rooms: [],
+            newRoomName: '',
+            newRoomError:''
         }
     };
 
@@ -44,6 +46,29 @@ export default class Lobby extends React.Component{
             }
         });
     };
+
+    handleNewRoomNameChange = (e) => {
+        this.setState({ newRoomName: e.target.value })
+    }
+
+    handleCreateRoomError=(body) => {
+        this.setState({newRoomError: body.errors[0].message});
+    }
+
+    createNewRoom = () => {
+        this.NaegelsApi.createRoom(this.Cookies.get('idToken'), this.state.newRoomName)
+        .then((body) => {
+            if(body.errors) {
+                this.handleCreateRoomError(body)
+            } else {
+                console.log(body)
+            }
+        })
+    }
+
+    clearErrorMessage=(e) => {
+        this.setState({newRoomError: ""});
+    }
     
     componentWillMount = () => {
         this.GetRoomsList();
@@ -68,11 +93,12 @@ export default class Lobby extends React.Component{
                                         <th className="lobby-table-cell">Host</th>
                                         <th className="lobby-table-cell">Created</th>
                                         <th className="lobby-table-cell">Players</th>
+                                        <th className="lobby-table-cell">Status</th>
                                         <th className="lobby-table-cell">
                                             <FormButton
                                                 type="small-submit" 
                                                 value="Refresh" 
-                                                //onClick={this.GetRoomsList()}
+                                                onClick={this.GetRoomsList}
                                             >
                                             </FormButton>
                                         </th>
@@ -84,7 +110,8 @@ export default class Lobby extends React.Component{
                                         <td className="lobby-table-cell">{room.roomName}</td>
                                         <td className="lobby-table-cell">{room.host}</td>
                                         <td className="lobby-table-cell">{room.created}</td>
-                                        <td className="lobby-table-cell">{room.connectedUsers}</td>
+                                        <td className="lobby-table-cell">{room.connectedUsers} / 10</td>
+                                        <td className="lobby-table-cell">{room.status}</td>
                                         <td className="lobby-table-cell">
                                             <FormButton
                                                 type="small-submit" 
@@ -104,13 +131,16 @@ export default class Lobby extends React.Component{
                                     id="roomName"
                                     name="roomName"
                                     placeholder="New room name"
-                                    errorMessage=""
+                                    errorMessage={this.state.newRoomError}
+                                    onChange={this.handleNewRoomNameChange}
+                                    onClick={this.clearErrorMessage}
                                 ></InputField>
                             </div>
                             <div className="create-room-button-container">
                                 <FormButton
                                      type="Submit" 
-                                     value="Create new room" 
+                                     value="Create new room"
+                                     onClick={this.createNewRoom}
                                 >
                                 </FormButton>
                             </div>
