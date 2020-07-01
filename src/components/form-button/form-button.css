@@ -1,6 +1,6 @@
 .form-button{
     text-align: center;
-    font-family: Arimo;
+    font-family: calibri;
 
     box-sizing: border-box;
 
@@ -79,4 +79,18 @@
     background-image: url(./facebook.png);
     background-repeat: no-repeat;
     background-position: 13px;
+}
+
+.form-button[type=small-submit]{
+    width: 80px;
+    height: 20px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+
+    background: #308552;
+    border: none;
+    border-radius: 3px;
+    
+    color: white;
 }

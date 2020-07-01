@@ -23,16 +23,19 @@ export default class NaegelsApi {
         }
         
         const resourceLocation = `${this._apiHost}:${this._apiPort}${this._apiContext}${url}`
+        var req = {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }
+        if(data !== ''){
+            req.body = JSON.stringify(data)
+        }
         const res = await fetch(
             resourceLocation,
-            {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }
+            req
         );
         if(res.status >> 499) {
             throw new Error(`Could not fetch ${url}, received ${res.status}`)
@@ -58,6 +61,11 @@ export default class NaegelsApi {
             password: password
         };
         const res = await this.apiCall('/user/token', 'POST', data);
+        return res
+    }
+
+    getRooms = async () => {
+        const res = await this.apiCall('/room/all');
         return res
     }
 

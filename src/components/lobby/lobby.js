@@ -2,6 +2,7 @@ import React from 'react';
 
 import './lobby.css'
 import Cookies from 'universal-cookie';
+import NaegelsApi from '../../services/naegels-api-service';
 
 import InputField from '../input-field';
 import FormButton from '../form-button';
@@ -10,13 +11,14 @@ export default class Lobby extends React.Component{
 
     constructor(props) {
         super(props);
-        this.CheckIfAlreadyLoggedIn = this.CheckIfAlreadyLoggedIn.bind(this);
+        this.GetRoomsList = this.GetRoomsList.bind(this);
         this.state = {
-            
+            rooms: []
         }
     };
 
     Cookies = new Cookies();
+    NaegelsApi = new NaegelsApi();
 
     CheckIfAlreadyLoggedIn = () => {
         const idToken = this.Cookies.get('idToken')
@@ -24,6 +26,28 @@ export default class Lobby extends React.Component{
             window.location.replace('/signin/expired');
         }
     }
+
+    GetRoomsList = () => {
+        this.NaegelsApi.getRooms()
+        .then((body) => {
+            if(body.errors) {
+                console.log('Something went wrong! Cannot get rooms list!')
+            } else {
+                const newRooms = []
+                body.rooms.forEach(r => {
+                    r.created = r.created // TODO: format timestamp (firstly, convert all dates to numbers in server responses)
+                    r.id = r.roomId
+                    newRooms.push(r)
+                });
+                this.setState({rooms: newRooms})
+                console.log(newRooms)
+            }
+        });
+    };
+    
+    componentWillMount = () => {
+        this.GetRoomsList();
+      }
 
     render() {
 
@@ -44,80 +68,32 @@ export default class Lobby extends React.Component{
                                         <th className="lobby-table-cell">Host</th>
                                         <th className="lobby-table-cell">Created</th>
                                         <th className="lobby-table-cell">Players</th>
-                                        <th className="lobby-table-cell"></th>
+                                        <th className="lobby-table-cell">
+                                            <FormButton
+                                                type="small-submit" 
+                                                value="Refresh" 
+                                                //onClick={this.GetRoomsList()}
+                                            >
+                                            </FormButton>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="lobby-table-body">
+                                {this.state.rooms.map(room => {return (
                                     <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">1</td>
-                                        <td className="lobby-table-cell">2</td>
-                                        <td className="lobby-table-cell">3</td>
-                                        <td className="lobby-table-cell">4</td>
-                                        <td className="lobby-table-cell">5</td>
-                                    </tr>
-                                    <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">1</td>
-                                        <td className="lobby-table-cell">2</td>
-                                        <td className="lobby-table-cell">3</td>
-                                        <td className="lobby-table-cell">4</td>
-                                        <td className="lobby-table-cell">5</td>
-                                    </tr>
-                                    <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">1</td>
-                                        <td className="lobby-table-cell">2</td>
-                                        <td className="lobby-table-cell">3</td>
-                                        <td className="lobby-table-cell">4</td>
-                                        <td className="lobby-table-cell">5</td>
-                                    </tr>
-                                    <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">1</td>
-                                        <td className="lobby-table-cell">2</td>
-                                        <td className="lobby-table-cell">3</td>
-                                        <td className="lobby-table-cell">4</td>
-                                        <td className="lobby-table-cell">5</td>
-                                    </tr>
-                                    <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">1</td>
-                                        <td className="lobby-table-cell">2</td>
-                                        <td className="lobby-table-cell">3</td>
-                                        <td className="lobby-table-cell">4</td>
-                                        <td className="lobby-table-cell">5</td>
-                                    </tr>
-                                    <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">1</td>
-                                        <td className="lobby-table-cell">2</td>
-                                        <td className="lobby-table-cell">3</td>
-                                        <td className="lobby-table-cell">4</td>
-                                        <td className="lobby-table-cell">5</td>
-                                    </tr>
-                                    <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">1</td>
-                                        <td className="lobby-table-cell">2</td>
-                                        <td className="lobby-table-cell">3</td>
-                                        <td className="lobby-table-cell">4</td>
-                                        <td className="lobby-table-cell">5</td>
-                                    </tr>
-                                    <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">1</td>
-                                        <td className="lobby-table-cell">2</td>
-                                        <td className="lobby-table-cell">3</td>
-                                        <td className="lobby-table-cell">4</td>
-                                        <td className="lobby-table-cell">5</td>
-                                    </tr>
-                                    <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">1</td>
-                                        <td className="lobby-table-cell">2</td>
-                                        <td className="lobby-table-cell">3</td>
-                                        <td className="lobby-table-cell">4</td>
-                                        <td className="lobby-table-cell">5</td>
-                                    </tr>
-                                    <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">1</td>
-                                        <td className="lobby-table-cell">2</td>
-                                        <td className="lobby-table-cell">3</td>
-                                        <td className="lobby-table-cell">4</td>
-                                        <td className="lobby-table-cell">5</td>
-                                    </tr>
+                                        <td className="lobby-table-cell">{room.roomName}</td>
+                                        <td className="lobby-table-cell">{room.host}</td>
+                                        <td className="lobby-table-cell">{room.created}</td>
+                                        <td className="lobby-table-cell">{room.connectedUsers}</td>
+                                        <td className="lobby-table-cell">
+                                            <FormButton
+                                                type="small-submit" 
+                                                value="Join" 
+                                            >
+                                            </FormButton>
+                                        </td>
+                                    </tr>   
+                                )})}
                                 </tbody>
                             </table>
                         </div>
@@ -128,16 +104,13 @@ export default class Lobby extends React.Component{
                                     id="roomName"
                                     name="roomName"
                                     placeholder="New room name"
-                                    onChange=""
                                     errorMessage=""
-                                    onClick=""
                                 ></InputField>
                             </div>
                             <div className="create-room-button-container">
                                 <FormButton
                                      type="Submit" 
                                      value="Create new room" 
-                                     onClick=""
                                 >
                                 </FormButton>
                             </div>
