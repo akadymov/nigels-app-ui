@@ -52,7 +52,7 @@ export default class Lobby extends React.Component{
         this.NaegelsApi.connectRoom(this.Cookies.get('idToken'), roomId)
         .then((body) => {
             if(!body.errors){
-                console.log('Connected to room ' + roomId)
+                window.location.replace('/lobby/room/' + roomId)
             }
         });
     }

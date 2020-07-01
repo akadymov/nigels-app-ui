@@ -86,5 +86,13 @@ export default class NaegelsApi {
         return res
     };
 
+    getRoom = async (token, roomId) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/room/' + roomId, 'POST', data);
+        return res
+    };
+
 };
 

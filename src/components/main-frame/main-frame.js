@@ -7,8 +7,7 @@ import { Switch, Route } from 'react-router-dom';
 import RegistrationForm from '../registration-form';
 import SuccessfullRegistration from '../successfull-registration';
 import Lobby from '../lobby';
-
-
+import Room from '../room';
 
 
 const MainFrame = () => {
@@ -21,7 +20,8 @@ const MainFrame = () => {
                     <Route path="/signout" component={LoginForm}></Route>
                     <Route path="/register" component={RegistrationForm}></Route>
                     <Route path="/registration-succeed/:username" component={SuccessfullRegistration}></Route>
-                    <Route path="/lobby" component={Lobby}></Route>
+                    <Route exact path="/lobby" component={Lobby}></Route>
+                    <Route path="/lobby/room/:roomId" component={Room}></Route>
                     <Route path="/" component={LoginForm}></Route>
                 </Switch>
             </div>

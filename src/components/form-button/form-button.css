@@ -95,6 +95,24 @@
     color: white;
 }
 
+.form-button[type=kick]{
+    width: 33px;
+    height: 29px;
+    background-image: url(./kick-icon.png);
+    border: none;
+    border-radius: 3px;
+    margin: 3px;
+}
+
+.form-button[type=confirm]{
+    width: 33px;
+    height: 29px;
+    background-image: url(./confirm-icon.png);
+    border: none;
+    border-radius: 3px;
+    margin: 3px;
+}
+
 .form-button:disabled{
     background-color: #929292;
     cursor: not-allowed;

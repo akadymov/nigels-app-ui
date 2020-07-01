@@ -12,7 +12,7 @@ export default class NavigationPanel extends React.Component{
         this.state = {
             pagesList : [
                 { id: 'About', label: 'About' , location: null },
-                { id: 'Lobby', label: 'Lobby' , location: null  },
+                { id: 'Lobby', label: 'Lobby' , location: '/lobby'  },
                 { id: 'Leaderboard', label: 'Leaderboard' , location: null  },
                 { id: 'Feedback', label: 'Feedback' , location: null  },
                 { id: 'Sign In', label: 'Sign In' , location:'/signin'}
@@ -34,7 +34,6 @@ export default class NavigationPanel extends React.Component{
             newPagesList[signinIndex] = {...newPagesList[signinIndex], location: '/signin'}
         }
         this.setState ({pagesList: newPagesList})
-        console.log(this.state.pagesList)
     }
     
     componentWillMount = () => {
