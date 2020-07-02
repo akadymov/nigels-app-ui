@@ -44,7 +44,7 @@ module.exports = (req, res) => {
           }
         ],
         "created": "Wed, 01 Jul 2020 21:20:41 GMT",
-        "host": "kuznets",
+        "host": "akadymov",
         "roomId": roomId,
         "roomName": "Тюкалинские бандиты",
         "status": "open"

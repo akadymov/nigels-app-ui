@@ -79,8 +79,13 @@ tr:nth-child(even) {background-color: #E5E5E5;}
 
 .room-table-cell{
     padding-left: 10px;
+    height: 36px;
     border-top: 1px solid #929292;
     text-align: left;
+}
+
+.room-table-row[thisIsMe=false]{
+    color: #929292;
 }
 
 .room-management-container{
@@ -108,6 +113,7 @@ tr:nth-child(even) {background-color: #E5E5E5;}
     background-image: url(./host-icon.png);
     background-repeat: no-repeat;
     background-position: 100px;
+    margin: 0px;
 }
 
 .status[ready=true]{

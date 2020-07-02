@@ -15,7 +15,8 @@ export default class Room extends React.Component{
                 connectedUsers: [],
                 host: ''
             },
-            startGameError: ''
+            startGameError: '',
+            youAreHost: false
         }
     };
 
@@ -37,6 +38,9 @@ export default class Room extends React.Component{
             } else {
                 this.setState({roomDetails: body})
                 console.log(this.state.roomDetails.connectedUsers)
+                if(body.host === this.Cookies.get('username')) {
+                    this.setState({youAreHost: true})
+                }
             }
         });
     };
@@ -98,7 +102,7 @@ export default class Room extends React.Component{
                                 </thead>
                                 <tbody className="room-table-body">
                                 {this.state.roomDetails.connectedUsers.map(player => {return (
-                                    <tr className="room-table-row">
+                                    <tr className="room-table-row" thisIsMe={player.username === this.Cookies.get('username') ? 'true' : 'false'}>
                                         <td className="room-table-cell">
                                             <p className="username" host={player.username === this.state.roomDetails.host ? 'true' : 'false'}>
                                                 {player.username}
@@ -108,8 +112,8 @@ export default class Room extends React.Component{
                                             <img className="status" ready={player.ready ? 'true' : 'false'}></img>
                                         </td>
                                         <td className="room-table-cell">
-                                            <FormButton type="kick"></FormButton>
-                                            <FormButton type="confirm"></FormButton>
+                                            {(this.state.youAreHost || player.username === this.Cookies.get('username')) ? <FormButton type="kick"></FormButton> : ''}
+                                            {((this.state.youAreHost || player.username === this.Cookies.get('username') ) && !player.ready) ? <FormButton type="confirm"></FormButton> : ''}
                                         </td>
                                         <td className="room-table-cell">{player.rating}</td>
                                         <td className="room-table-cell"></td>
