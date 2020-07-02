@@ -9,7 +9,7 @@ export default class NaegelsApi {
             return Promise.resolve(response)
         } else {
             return Promise.reject(new Error(response.statusText))  
-        }  
+        }
     }
 
     json(response) {  

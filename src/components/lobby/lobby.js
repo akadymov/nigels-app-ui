@@ -15,7 +15,8 @@ export default class Lobby extends React.Component{
         this.state = {
             rooms: [],
             newRoomName: '',
-            newRoomError:''
+            newRoomError:'',
+            popupError:''
         }
     };
 
@@ -53,6 +54,8 @@ export default class Lobby extends React.Component{
         .then((body) => {
             if(!body.errors){
                 window.location.replace('/lobby/room/' + roomId)
+            } else {
+                this.setState({popupError: body.errors.message})
             }
         });
     }
@@ -78,6 +81,7 @@ export default class Lobby extends React.Component{
 
     clearErrorMessage=(e) => {
         this.setState({newRoomError: ""});
+        this.setState({popupError: ""});
     }
     
     componentWillMount = () => {
@@ -90,7 +94,7 @@ export default class Lobby extends React.Component{
         
         return (
             <div>
-                <div className="lobby-frame">
+                <div className="lobby-frame" popupError={this.state.popupError}>
                         <p className="lobby-header">
                             Welcome back, {this.Cookies.get('username')}!
                         </p>
@@ -161,6 +165,17 @@ export default class Lobby extends React.Component{
                         </div>
                     </div>
                 </div>
+                {this.state.popupError !== '' ? 
+                    <div className="info-popup">
+                        <p className="error-message">{this.state.popupError}</p>
+                        <FormButton
+                            type="submit"
+                            value="OK"
+                            onClick={this.clearErrorMessage}
+                        >
+                        </FormButton>
+                    </div>
+                : ''}
             </div>
             
         )
