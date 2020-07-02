@@ -94,7 +94,6 @@ tr:nth-child(even) {background-color: #E5E5E5;}
 }
 
 .room-management-container{
-    text-align: center;
     top:80%;
     width: 100%;
     height: 20%;
@@ -102,12 +101,14 @@ tr:nth-child(even) {background-color: #E5E5E5;}
     outline: 1px solid #308552;
 }
 
-.room-name-input-container{
+.start-game-button-container{
     position: absolute;
     width:50%;
+    left:0%;
+    margin-top: -2%;
 }
 
-.create-room-button-container{
+.close-room-button-container{
     position: absolute;
     width:50%;
     left:50%;

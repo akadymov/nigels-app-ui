@@ -55,9 +55,14 @@ export default class Lobby extends React.Component{
             if(!body.errors){
                 window.location.replace('/lobby/room/' + roomId)
             } else {
-                this.setState({popupError: body.errors.message})
+                this.setState({popupError: body.errors[0].message})
             }
         });
+    }
+
+    openRoom = (e) => {
+        const roomId = e.target.id
+        window.location.replace('/lobby/room/' + roomId)
     }
 
     handleNewRoomNameChange = (e) => {
@@ -74,7 +79,7 @@ export default class Lobby extends React.Component{
             if(body.errors) {
                 this.handleCreateRoomError(body)
             } else {
-                console.log(body)
+                window.location.replace('/lobby/room/' + body.roomId)
             }
         })
     }
@@ -82,6 +87,7 @@ export default class Lobby extends React.Component{
     clearErrorMessage=(e) => {
         this.setState({newRoomError: ""});
         this.setState({popupError: ""});
+        this.GetRoomsList()
     }
     
     componentWillMount = () => {
@@ -127,14 +133,24 @@ export default class Lobby extends React.Component{
                                         <td className="lobby-table-cell">{room.connectedUsers} / 10</td>
                                         <td className="lobby-table-cell">{room.status}</td>
                                         <td className="lobby-table-cell">
-                                            <FormButton
-                                                type="small-submit" 
-                                                value="Join"
-                                                id={room.roomId}
-                                                onClick={this.connectRoom}
-                                                disabled={room.status !== 'open'}
-                                            >
-                                            </FormButton>
+                                            {this.Cookies.get('username')===room.host ? 
+                                                <FormButton
+                                                    type="small-submit" 
+                                                    value="Open"
+                                                    id={room.roomId}
+                                                    onClick={this.openRoom}
+                                                    disabled={room.status !== 'open'}
+                                                >   
+                                                </FormButton> :
+                                                <FormButton
+                                                    type="small-submit" 
+                                                    value="Join"
+                                                    id={room.roomId}
+                                                    onClick={this.connectRoom}
+                                                    disabled={room.status !== 'open'}
+                                                >   
+                                                </FormButton>
+                                            }
                                         </td>
                                     </tr>   
                                 )})}

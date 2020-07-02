@@ -1,7 +1,7 @@
 export default class NaegelsApi {
 
     _apiHost = 'http://localhost'
-    _apiPort = '9000'
+    _apiPort = '5000'
     _apiContext = '/api/v1'
 
     status(response) {  
@@ -83,6 +83,14 @@ export default class NaegelsApi {
             token: token
         };
         const res = await this.apiCall('/room/' + roomId + '/connect', 'POST', data);
+        return res
+    };
+
+    closeRoom = async (token, roomId) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/room/' + roomId + '/close', 'POST', data);
         return res
     };
 

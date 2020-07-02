@@ -12,12 +12,13 @@ export default class Room extends React.Component{
         super(props);
         this.state = {
             roomDetails: {
-                connectedUsers: [],
+                connectedUserList: [],
                 host: ''
             },
             startGameError: '',
             popupError: '',
-            youAreHost: false
+            youAreHost: false,
+            nextUrl: ''
         }
     };
 
@@ -32,15 +33,18 @@ export default class Room extends React.Component{
     }
 
     GetRoomDetails = () => {
-        this.NaegelsApi.getRoom(this.Cookies.get('idToken'), this.props.match.params.roomId)
+        this.NaegelsApi.getRoom(this.props.match.params.roomId)
         .then((body) => {
             if(body.errors) {
                 console.log('Something went wrong! Cannot get rooms list!')
             } else {
                 this.setState({roomDetails: body})
-                console.log(this.state.roomDetails.connectedUsers)
+                console.log(this.state.roomDetails.connectedUserList)
                 if(body.host === this.Cookies.get('username')) {
                     this.setState({youAreHost: true})
+                }
+                if(this.state.roomDetails.status === 'closed') {
+                    window.location.replace('/lobby')
                 }
             }
         });
@@ -68,7 +72,21 @@ export default class Room extends React.Component{
             if(!body.errors){
                 window.location.replace('/lobby')
             } else {
-                this.setState({popupError: body.errors.message})
+                this.setState({popupError: body.errors[0].message})
+            }
+        });
+    }
+
+    closeRoom = (e) => {
+        const roomId = e.target.id
+        this.NaegelsApi.closeRoom(this.Cookies.get('idToken'), roomId)
+        .then((body) => {
+            if(body.errors){
+                this.setState({popupError: body.errors[0].message})
+            } else {
+                this.setState({popupError: 'Room with id ' + roomId + ' was successfully closed!'})
+                this.setState({nextUrl: '/lobby'})
+                console.log(this.state.nextUrl)
             }
         });
     }
@@ -76,6 +94,12 @@ export default class Room extends React.Component{
     clearErrorMessage=(e) => {
         this.setState({startGameError: ""});
         this.setState({popupError:""})
+    }
+
+    redirect=() =>{
+        if(this.state.nextUrl!==''){
+            window.location.replace(this.state.nextUrl)
+        }
     }
     
     componentWillMount = () => {
@@ -85,6 +109,7 @@ export default class Room extends React.Component{
     render() {
 
         this.CheckIfAlreadyLoggedIn();
+        this.redirect();
         
         return (
             <div>
@@ -115,7 +140,7 @@ export default class Room extends React.Component{
                                     </tr>
                                 </thead>
                                 <tbody className="room-table-body">
-                                {this.state.roomDetails.connectedUsers.map(player => {return (
+                                {this.state.roomDetails.connectedUserList.map(player => {return (
                                     <tr className="room-table-row" thisIsMe={player.username === this.Cookies.get('username') ? 'true' : 'false'}>
                                         <td className="room-table-cell">
                                             <p className="username" host={player.username === this.state.roomDetails.host ? 'true' : 'false'}>
@@ -138,7 +163,7 @@ export default class Room extends React.Component{
                             </table>
                         </div>
                         <div className="room-management-container">
-                            <div className="create-room-button-container">
+                            <div className="start-game-button-container">
                                 <FormButton
                                      type="Submit" 
                                      value="Start game"
@@ -146,6 +171,15 @@ export default class Room extends React.Component{
                                      disabled={this.Cookies.get('username') !== this.state.roomDetails.host}
                                 >
                                 </FormButton>
+                            </div>
+                            <div className="close-room-button-container">
+                                <FormButton
+                                     type="Submit" 
+                                    value="Close"
+                                    id={this.state.roomDetails.roomId}
+                                    onClick={this.closeRoom}
+                                    disabled={this.Cookies.get('username')!==this.state.roomDetails.host}
+                                ></FormButton>
                             </div>
                         </div>
                     </div>
