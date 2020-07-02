@@ -9,6 +9,11 @@
     position: absolute;
 }
 
+.room-frame:not([popupError=""]){
+    pointer-events: none;
+    filter: blur(2px);
+}
+
 .room-header{
     text-align: center;
     font-family: calibri;

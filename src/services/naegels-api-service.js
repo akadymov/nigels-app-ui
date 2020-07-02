@@ -94,5 +94,13 @@ export default class NaegelsApi {
         return res
     };
 
+    disconnectRoom = async (token, roomId) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/room/' + roomId + '/disconnect', 'POST', data);
+        return res
+    };
+
 };
 

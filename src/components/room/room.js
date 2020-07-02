@@ -16,6 +16,7 @@ export default class Room extends React.Component{
                 host: ''
             },
             startGameError: '',
+            popupError: '',
             youAreHost: false
         }
     };
@@ -50,7 +51,7 @@ export default class Room extends React.Component{
     }
 
     startGame = () => {
-        this.NaegelsApi.createRoom(this.Cookies.get('idToken'), this.state.newRoomName)
+        this.NaegelsApi.startGame(this.Cookies.get('idToken'), this.state.newRoomName)
         .then((body) => {
             if(body.errors) {
                 this.handleCreateRoomError(body)
@@ -60,8 +61,21 @@ export default class Room extends React.Component{
         })
     }
 
+    disconnectRoom = () => {
+        const roomId = this.state.roomDetails.roomId
+        this.NaegelsApi.disconnectRoom(this.Cookies.get('idToken'), roomId)
+        .then((body) => {
+            if(!body.errors){
+                window.location.replace('/lobby')
+            } else {
+                this.setState({popupError: body.errors.message})
+            }
+        });
+    }
+
     clearErrorMessage=(e) => {
         this.setState({startGameError: ""});
+        this.setState({popupError:""})
     }
     
     componentWillMount = () => {
@@ -74,7 +88,7 @@ export default class Room extends React.Component{
         
         return (
             <div>
-                <div className="room-frame">
+                <div className="room-frame" popupError={this.state.popupError}>
                         <p className="room-header">
                             {this.state.roomDetails.roomName}
                         </p>
@@ -112,8 +126,9 @@ export default class Room extends React.Component{
                                             <img className="status" ready={player.ready ? 'true' : 'false'}></img>
                                         </td>
                                         <td className="room-table-cell">
-                                            {(this.state.youAreHost || player.username === this.Cookies.get('username')) ? <FormButton type="kick"></FormButton> : ''}
-                                            {((this.state.youAreHost || player.username === this.Cookies.get('username') ) && !player.ready) ? <FormButton type="confirm"></FormButton> : ''}
+                                            {(this.state.youAreHost) ? <FormButton type="kick" onClick={console.log('Kick Method is not developed yet!')}></FormButton> : ''}
+                                            {((this.state.youAreHost || player.username === this.Cookies.get('username') ) && !player.ready) ? <FormButton type="confirm" onClick={console.log('Player status confirmation method is not developed yet!')}></FormButton> : ''}
+                                            {(player.username === this.Cookies.get('username')) ? <FormButton type="disconnect" onClick={this.disconnectRoom}></FormButton> : ''}
                                         </td>
                                         <td className="room-table-cell">{player.rating}</td>
                                         <td className="room-table-cell"></td>
@@ -128,13 +143,24 @@ export default class Room extends React.Component{
                                      type="Submit" 
                                      value="Start game"
                                      onClick={this.startGame}
-                                     disabled={this.state.newRoomName==='' || this.state.newRoomError !== ''}
+                                     disabled={this.Cookies.get('username') !== this.state.roomDetails.host}
                                 >
                                 </FormButton>
                             </div>
                         </div>
                     </div>
                 </div>
+                {this.state.popupError !== '' ? 
+                    <div className="info-popup">
+                        <p className="error-message">{this.state.popupError}</p>
+                        <FormButton
+                            type="submit"
+                            value="OK"
+                            onClick={this.clearErrorMessage}
+                        >
+                        </FormButton>
+                    </div>
+                : ''}
             </div>
             
         )

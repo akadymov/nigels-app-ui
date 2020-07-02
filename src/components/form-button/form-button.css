@@ -111,6 +111,14 @@
     margin-right: 2px;
 }
 
+.form-button[type=disconnect]{
+    width: 33px;
+    height: 29px;
+    background-image: url(./disconnect-icon.png);
+    border: none;
+    margin-right: 2px;
+}
+
 .form-button:disabled{
     background-color: #929292;
     cursor: not-allowed;
