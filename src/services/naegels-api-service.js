@@ -1,7 +1,7 @@
 export default class NaegelsApi {
 
     _apiHost = 'http://localhost'
-    _apiPort = '9000'
+    _apiPort = '5000'
     _apiContext = '/api/v1'
 
     status(response) {  
@@ -9,7 +9,7 @@ export default class NaegelsApi {
             return Promise.resolve(response)
         } else {
             return Promise.reject(new Error(response.statusText))  
-        }  
+        }
     }
 
     json(response) {  
@@ -83,6 +83,46 @@ export default class NaegelsApi {
             token: token
         };
         const res = await this.apiCall('/room/' + roomId + '/connect', 'POST', data);
+        return res
+    };
+
+    closeRoom = async (token, roomId) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/room/' + roomId + '/close', 'POST', data);
+        return res
+    };
+
+    getRoom = async (roomId) => {
+        const res = await this.apiCall('/room/' + roomId);
+        return res
+    };
+
+    disconnectRoom = async (token, roomId, username) => {
+        const data = {
+            token: token,
+            username: username
+        };
+        const res = await this.apiCall('/room/' + roomId + '/disconnect', 'POST', data);
+        return res
+    };
+
+    confirmReady = async (token, roomId, username) => {
+        const data = {
+            token: token,
+            username: username
+        };
+        const res = await this.apiCall('/room/' + roomId + '/ready', 'POST', data);
+        return res
+    };
+
+    resetReady = async (token, roomId, username) => {
+        const data = {
+            token: token,
+            username: username
+        };
+        const res = await this.apiCall('/room/' + roomId + '/ready/reset', 'POST', data);
         return res
     };
 

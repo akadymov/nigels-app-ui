@@ -6,6 +6,8 @@ import NaegelsApi from '../../services/naegels-api-service';
 
 import InputField from '../input-field';
 import FormButton from '../form-button';
+import ActiveFrame from '../active-frame';
+import InfoPopup from '../info-popup';
 
 export default class Lobby extends React.Component{
 
@@ -15,7 +17,10 @@ export default class Lobby extends React.Component{
         this.state = {
             rooms: [],
             newRoomName: '',
-            newRoomError:''
+            newRoomError:'',
+            popupError:'',
+            confirmActionMsg:'',
+            confirmAction:''
         }
     };
 
@@ -52,9 +57,16 @@ export default class Lobby extends React.Component{
         this.NaegelsApi.connectRoom(this.Cookies.get('idToken'), roomId)
         .then((body) => {
             if(!body.errors){
-                console.log('Connected to room ' + roomId)
+                window.location.replace('/lobby/room/' + roomId)
+            } else {
+                this.setState({popupError: body.errors[0].message})
             }
         });
+    }
+
+    openRoom = (e) => {
+        const roomId = e.target.id
+        window.location.replace('/lobby/room/' + roomId)
     }
 
     handleNewRoomNameChange = (e) => {
@@ -71,13 +83,17 @@ export default class Lobby extends React.Component{
             if(body.errors) {
                 this.handleCreateRoomError(body)
             } else {
-                console.log(body)
+                window.location.replace('/lobby/room/' + body.roomId)
             }
         })
     }
 
     clearErrorMessage=(e) => {
         this.setState({newRoomError: ""});
+        this.setState({popupError: ""});
+        this.setState({confirmActionMsg: ""});
+        this.setState({confirmAction: ""});
+        this.GetRoomsList()
     }
     
     componentWillMount = () => {
@@ -90,7 +106,7 @@ export default class Lobby extends React.Component{
         
         return (
             <div>
-                <div className="lobby-frame">
+                <ActiveFrame popupError={this.state.popupError} confirmActionMsg={this.state.confirmActionMsg}>
                         <p className="lobby-header">
                             Welcome back, {this.Cookies.get('username')}!
                         </p>
@@ -117,20 +133,32 @@ export default class Lobby extends React.Component{
                                 <tbody className="lobby-table-body">
                                 {this.state.rooms.map(room => {return (
                                     <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">{room.roomName}</td>
+                                        <td className="lobby-table-cell">
+                                            <a className="room-href" href={'/lobby/room/' + room.roomId}>{room.roomName}</a>
+                                        </td>
                                         <td className="lobby-table-cell">{room.host}</td>
                                         <td className="lobby-table-cell">{room.created}</td>
                                         <td className="lobby-table-cell">{room.connectedUsers} / 10</td>
                                         <td className="lobby-table-cell">{room.status}</td>
                                         <td className="lobby-table-cell">
-                                            <FormButton
-                                                type="small-submit" 
-                                                value="Join"
-                                                id={room.roomId}
-                                                onClick={this.connectRoom}
-                                                disabled={room.status !== 'open'}
-                                            >
-                                            </FormButton>
+                                            {this.Cookies.get('username')===room.host ? 
+                                                <FormButton
+                                                    type="small-submit" 
+                                                    value="Open"
+                                                    id={room.roomId}
+                                                    onClick={this.openRoom}
+                                                    disabled={room.status !== 'open'}
+                                                >   
+                                                </FormButton> :
+                                                <FormButton
+                                                    type="small-submit" 
+                                                    value="Join"
+                                                    id={room.roomId}
+                                                    onClick={this.connectRoom}
+                                                    disabled={room.status !== 'open'}
+                                                >   
+                                                </FormButton>
+                                            }
                                         </td>
                                     </tr>   
                                 )})}
@@ -160,7 +188,13 @@ export default class Lobby extends React.Component{
                             </div>
                         </div>
                     </div>
-                </div>
+                </ActiveFrame>
+                {this.state.popupError !== '' ? 
+                    <InfoPopup
+                        popupError={this.state.popupError}
+                        clearErrorMessage={this.clearErrorMessage}
+                    ></InfoPopup>
+                : ''}
             </div>
             
         )

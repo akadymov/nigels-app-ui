@@ -29,8 +29,8 @@ export default class RegistrationForm extends React.Component{
                 {id:"repeatPassword", name:"repeatPassword", type: "password", placeholder: "Repeat password", onChange: this.handleRepeatPasswordChange, errorMessage: "", value: ""}
             ],
             languages: [
-                {type:"radio", id:"preferred-lang", name:"preferred-lang", lang:"en", errorMessage:""},
-                {type:"radio", id:"preferred-lang", name:"preferred-lang", lang:"ru", errorMessage:""}
+                {type:"radio", id:"preferred-lang-en", name:"preferred-lang", lang:"en", errorMessage:""},
+                {type:"radio", id:"preferred-lang-ru", name:"preferred-lang", lang:"ru", errorMessage:""}
             ]
       };
     }
@@ -97,12 +97,12 @@ export default class RegistrationForm extends React.Component{
 
         return (
                 <div>
-                    <div className="active-frame">
+                    <div className="registration-active-frame">
                         <div className="registration-form">
                             {this.state.textFieldsList.map(field => {
                                 return <InputField
                                     type={field.type}
-                                    id={field.name}
+                                    id={field.id}
                                     name={field.name}
                                     placeholder={field.placeholder}
                                     onChange={field.onChange}

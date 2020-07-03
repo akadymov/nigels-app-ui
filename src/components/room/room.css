@@ -1,4 +1,4 @@
-.lobby-header{
+.room-header{
     text-align: center;
     font-family: calibri;
     font-style: normal;
@@ -9,7 +9,17 @@
     color: #308552;
 }
 
-.lobby-form{
+.room-h2{
+    text-align: center;
+    font-family: calibri;
+    font-style: normal;
+    font-size: 18px;
+    margin-top: -20px;
+
+    color: #308552;
+}
+
+.room-form{
     text-align: center;
     position: absolute;
     width: 90%;
@@ -21,7 +31,7 @@
     box-sizing: border-box;
 }
 
-.lobby-table-container{
+.room-table-container{
     text-align: center;
     position: absolute;
     width: 100%;
@@ -32,7 +42,7 @@
     box-sizing: border-box;
 }
 
-.lobby-table{
+.room-table{
     text-align: center;
     vertical-align: middle;
     width: 100%;
@@ -40,30 +50,34 @@
     border-collapse: collapse;
 }
 
-.lobby-table-header{
+.room-table-header{
     background: #2F3F35;
     border: 1px #308552;
     color: white;
 }
 
-.lobby-table-body{
-    color: #4EA470
+.room-table-body{
+    color: #4EA470;
 }
 
 tr:nth-child(even) {background-color: #E5E5E5;}
 
-.lobby-table-row{
+.room-table-row{
     height: 36px;
 }
 
-.lobby-table-cell{
+.room-table-cell{
     padding-left: 10px;
+    height: 36px;
     border-top: 1px solid #929292;
     text-align: left;
 }
 
-.lobby-management-container{
-    text-align: center;
+.room-table-row[thisIsMe=false]{
+    color: #929292;
+}
+
+.room-management-container{
     top:80%;
     width: 100%;
     height: 20%;
@@ -71,19 +85,31 @@ tr:nth-child(even) {background-color: #E5E5E5;}
     outline: 1px solid #308552;
 }
 
-.room-name-input-container{
+.start-game-button-container{
     position: absolute;
     width:50%;
+    left:0%;
+    margin-top: -2%;
 }
 
-.create-room-button-container{
+.close-room-button-container{
     position: absolute;
     width:50%;
     left:50%;
     margin-top: -2%;
 }
 
-.room-href {
-    color: #308552;
-    text-decoration: underline;
+.username[host=true]{
+    background-image: url(./host-icon.png);
+    background-repeat: no-repeat;
+    margin: 0px;
+    padding-left: 20px;
+}
+
+.status[ready=true]{
+    content: url(./ready-icon.png);
+}
+
+.status[ready=false]{
+    content: url(./not-ready-icon.png);
 }

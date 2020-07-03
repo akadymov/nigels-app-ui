@@ -15,11 +15,11 @@ module.exports = (req, res) => {
     }
   
     if (roomId === "2") {
-      error="You are already connected to specified room!"
+      error="You are not connected to specified room!"
     }
   
-    if (roomId === "4") {
-      error = "Room with specified id is full!"
+    if (roomId === "3") {
+      error = "You cannot disconnect from hosted room!"
     }
 
     if(error) {

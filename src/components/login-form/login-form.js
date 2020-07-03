@@ -37,6 +37,12 @@ export default class LoginForm extends React.Component{
         }
     }
 
+    SignOut = () => {
+        this.Cookies.remove('idToken');
+        this.Cookies.remove('username');
+        window.location.replace('/signin');
+    }
+
     SendLoginRequest = () => {
         this.NaegelsApi.login(
             this.state.username, 
@@ -84,12 +90,16 @@ export default class LoginForm extends React.Component{
     }
 
     render() {
-
+      
+        if(this.props.location.pathname === '/signout') {
+            this.SignOut();
+        }
+      
         this.CheckIfAlreadyLoggedIn();
 
         return (
             <div>
-                <div className="active-frame">
+                <div className="login-active-frame">
                     <div className="login-form">
                     {this.props.match.params.reason==='expired' ? <p className="errorDiv"><b>You have to sign in to access application</b></p> : ''}
                     {this.state.textFieldsList.map(field => {
