@@ -17,6 +17,8 @@ export default class Room extends React.Component{
             },
             startGameError: '',
             popupError: '',
+            confirmActionMsg:'',
+            confirmAction:'',
             youAreHost: false,
             nextUrl: ''
         }
@@ -68,6 +70,12 @@ export default class Room extends React.Component{
     disconnectRoom = (e) => {
         const roomId = this.state.roomDetails.roomId
         const username = e.target.id
+        if(username==this.state.roomDetails.host){
+            this.setState({
+                confirmActionMsg: 'Are you sure you want to leave room? It will be closed since you are host',
+                confirmAction: this.closeRoom
+            })
+        }
         this.NaegelsApi.disconnectRoom(this.Cookies.get('idToken'), roomId, username)
         .then((body) => {
             if(!body.errors){
@@ -109,7 +117,7 @@ export default class Room extends React.Component{
     }
 
     closeRoom = (e) => {
-        const roomId = e.target.id
+        const roomId = this.state.roomDetails.roomId
         this.NaegelsApi.closeRoom(this.Cookies.get('idToken'), roomId)
         .then((body) => {
             if(body.errors){
@@ -124,7 +132,9 @@ export default class Room extends React.Component{
 
     clearErrorMessage=(e) => {
         this.setState({startGameError: ""});
-        this.setState({popupError:""})
+        this.setState({popupError:""});
+        this.setState({confirmAction:""});
+        this.setState({confirmActionMsg:""});
     }
 
     redirect=() =>{
@@ -241,6 +251,27 @@ export default class Room extends React.Component{
                             onClick={this.clearErrorMessage}
                         >
                         </FormButton>
+                    </div>
+                : ''}
+                {this.state.confirmActionMsg !== '' ? 
+                    <div className="info-popup">
+                        <p className="error-message">{this.state.confirmActionMsg}</p>
+                        <div className="confirm-action-cancel-div">
+                            <FormButton
+                                type="secondary-big"
+                                value="Cancel"
+                                onClick={this.clearErrorMessage}
+                            >
+                            </FormButton>
+                        </div>
+                        <div className="confirm-action-ok-div">
+                            <FormButton
+                                type="submit"
+                                value="OK"
+                                onClick={this.state.confirmAction}
+                            >
+                            </FormButton>
+                        </div>
                     </div>
                 : ''}
             </div>

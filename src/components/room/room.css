@@ -129,3 +129,14 @@ tr:nth-child(even) {background-color: #E5E5E5;}
 .status[ready=false]{
     content: url(./not-ready-icon.png);
 }
+
+.confirm-action-cancel-div{
+    width: 50%;
+    position:absolute;
+}
+
+.confirm-action-ok-div{
+    width: 50%;
+    left: 50%;
+    position:absolute;
+}
