@@ -1,0 +1,10 @@
+.confirm-action-cancel-div{
+    width: 50%;
+    position:absolute;
+}
+
+.confirm-action-ok-div{
+    width: 50%;
+    left: 50%;
+    position:absolute;
+}

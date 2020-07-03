@@ -99,7 +99,7 @@ export default class LoginForm extends React.Component{
 
         return (
             <div>
-                <div className="active-frame">
+                <div className="login-active-frame">
                     <div className="login-form">
                     {this.props.match.params.reason==='expired' ? <p className="errorDiv"><b>You have to sign in to access application</b></p> : ''}
                     {this.state.textFieldsList.map(field => {

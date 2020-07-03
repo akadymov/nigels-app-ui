@@ -7,6 +7,7 @@ import NaegelsApi from '../../services/naegels-api-service';
 import InputField from '../input-field';
 import FormButton from '../form-button';
 import ActiveFrame from '../active-frame';
+import ConfirmationPopup from '../confirmation-popup/confirmation-popup';
 
 export default class Lobby extends React.Component{
 

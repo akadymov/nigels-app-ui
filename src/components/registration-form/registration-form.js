@@ -97,7 +97,7 @@ export default class RegistrationForm extends React.Component{
 
         return (
                 <div>
-                    <div className="active-frame">
+                    <div className="registration-active-frame">
                         <div className="registration-form">
                             {this.state.textFieldsList.map(field => {
                                 return <InputField
