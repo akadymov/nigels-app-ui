@@ -1,0 +1,20 @@
+.active-frame{
+    width: 80%;
+    left: 25%;
+    right: 20%;
+    height: 80%;
+    top: 50%;
+    background: #FFFFFF;
+    border-radius: 10px;
+    position: absolute;
+}
+
+.active-frame:not([popupError=""]){
+    pointer-events: none;
+    filter: blur(2px);
+}
+
+.active-frame:not([confirmActionMsg=""]){
+    pointer-events: none;
+    filter: blur(2px);
+}

@@ -6,6 +6,7 @@ import NaegelsApi from '../../services/naegels-api-service';
 
 import InputField from '../input-field';
 import FormButton from '../form-button';
+import ActiveFrame from '../active-frame';
 
 export default class Lobby extends React.Component{
 
@@ -16,7 +17,9 @@ export default class Lobby extends React.Component{
             rooms: [],
             newRoomName: '',
             newRoomError:'',
-            popupError:''
+            popupError:'',
+            confirmActionMsg:'',
+            confirmAction:''
         }
     };
 
@@ -87,6 +90,8 @@ export default class Lobby extends React.Component{
     clearErrorMessage=(e) => {
         this.setState({newRoomError: ""});
         this.setState({popupError: ""});
+        this.setState({confirmActionMsg: ""});
+        this.setState({confirmAction: ""});
         this.GetRoomsList()
     }
     
@@ -100,7 +105,7 @@ export default class Lobby extends React.Component{
         
         return (
             <div>
-                <div className="lobby-frame" popupError={this.state.popupError}>
+                <ActiveFrame popupError={this.state.popupError} confirmActionMsg={this.state.confirmActionMsg}>
                         <p className="lobby-header">
                             Welcome back, {this.Cookies.get('username')}!
                         </p>
@@ -180,7 +185,7 @@ export default class Lobby extends React.Component{
                             </div>
                         </div>
                     </div>
-                </div>
+                </ActiveFrame>
                 {this.state.popupError !== '' ? 
                     <div className="info-popup">
                         <p className="error-message">{this.state.popupError}</p>

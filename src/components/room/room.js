@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie';
 import NaegelsApi from '../../services/naegels-api-service';
 
 import FormButton from '../form-button';
+import ActiveFrame from '../active-frame';
 
 export default class Room extends React.Component{
 
@@ -73,7 +74,7 @@ export default class Room extends React.Component{
         if(username==this.state.roomDetails.host){
             this.setState({
                 confirmActionMsg: 'Are you sure you want to leave room? It will be closed since you are host',
-                confirmAction: this.closeRoom
+                confirmAction: this.confirmCloseRoom
             })
         }
         this.NaegelsApi.disconnectRoom(this.Cookies.get('idToken'), roomId, username)
@@ -116,7 +117,14 @@ export default class Room extends React.Component{
         });
     }
 
-    closeRoom = (e) => {
+    closeRoom = () => {
+        this.setState({
+            confirmActionMsg: 'Are you sure you want close room?',
+            confirmAction: this.confirmCloseRoom
+        })
+    }
+
+    confirmCloseRoom = () => {
         const roomId = this.state.roomDetails.roomId
         this.NaegelsApi.closeRoom(this.Cookies.get('idToken'), roomId)
         .then((body) => {
@@ -154,7 +162,7 @@ export default class Room extends React.Component{
         
         return (
             <div>
-                <div className="room-frame" popupError={this.state.popupError}>
+                <ActiveFrame popupError={this.state.popupError} confirmActionMsg={this.state.confirmActionMsg}>
                         <p className="room-header">
                             {this.state.roomDetails.roomName}
                         </p>
@@ -241,7 +249,7 @@ export default class Room extends React.Component{
                             </div>
                         </div>
                     </div>
-                </div>
+                </ActiveFrame>
                 {this.state.popupError !== '' ? 
                     <div className="info-popup">
                         <p className="error-message">{this.state.popupError}</p>
