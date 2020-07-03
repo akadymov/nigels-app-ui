@@ -2,7 +2,7 @@ import React from 'react';
 
 import './form-button.css'
 
-const FormButton = ({ type, value, onClick, id , disabled, display }) => {
+const FormButton = ({ type, value, onClick, id , disabled, display, data }) => {
     return (
         <button 
             className="form-button" 
@@ -11,6 +11,7 @@ const FormButton = ({ type, value, onClick, id , disabled, display }) => {
             id={id} 
             disabled={disabled}
             display={display}
+            data={data}
         >
             {value}
         </button>

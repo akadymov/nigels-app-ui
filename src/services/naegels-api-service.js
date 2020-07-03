@@ -99,11 +99,30 @@ export default class NaegelsApi {
         return res
     };
 
-    disconnectRoom = async (token, roomId) => {
+    disconnectRoom = async (token, roomId, username) => {
         const data = {
-            token: token
+            token: token,
+            username: username
         };
         const res = await this.apiCall('/room/' + roomId + '/disconnect', 'POST', data);
+        return res
+    };
+
+    confirmReady = async (token, roomId, username) => {
+        const data = {
+            token: token,
+            username: username
+        };
+        const res = await this.apiCall('/room/' + roomId + '/ready', 'POST', data);
+        return res
+    };
+
+    resetReady = async (token, roomId, username) => {
+        const data = {
+            token: token,
+            username: username
+        };
+        const res = await this.apiCall('/room/' + roomId + '/ready/reset', 'POST', data);
         return res
     };
 

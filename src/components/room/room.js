@@ -65,12 +65,43 @@ export default class Room extends React.Component{
         })
     }
 
-    disconnectRoom = () => {
+    disconnectRoom = (e) => {
         const roomId = this.state.roomDetails.roomId
-        this.NaegelsApi.disconnectRoom(this.Cookies.get('idToken'), roomId)
+        const username = e.target.id
+        this.NaegelsApi.disconnectRoom(this.Cookies.get('idToken'), roomId, username)
         .then((body) => {
             if(!body.errors){
-                window.location.replace('/lobby')
+                if(username == this.Cookies.get('username')){
+                    window.location.replace('/lobby')
+                } else {
+                    this.GetRoomDetails();
+                }
+            } else {
+                this.setState({popupError: body.errors[0].message})
+            }
+        });
+    }
+
+    confirmReady = (e) => {
+        const roomId = this.state.roomDetails.roomId
+        const username = e.target.id
+        this.NaegelsApi.confirmReady(this.Cookies.get('idToken'), roomId, username)
+        .then((body) => {
+            if(!body.errors){
+                this.GetRoomDetails();
+            } else {
+                this.setState({popupError: body.errors[0].message})
+            }
+        });
+    }
+
+    resetReady = (e) => {
+        const roomId = this.state.roomDetails.roomId
+        const username = e.target.id
+        this.NaegelsApi.resetReady(this.Cookies.get('idToken'), roomId, username)
+        .then((body) => {
+            if(!body.errors){
+                this.GetRoomDetails();
             } else {
                 this.setState({popupError: body.errors[0].message})
             }
@@ -134,7 +165,7 @@ export default class Room extends React.Component{
                                                 type="small-submit" 
                                                 value="Refresh" 
                                                 onClick={this.GetRoomDetails}
-                                            >
+                                            >   
                                             </FormButton>
                                         </th>
                                     </tr>
@@ -148,12 +179,29 @@ export default class Room extends React.Component{
                                             </p>
                                         </td>
                                         <td className="room-table-cell">
-                                            <img className="status" ready={player.ready ? 'true' : 'false'}></img>
+                                            <img className="status" ready={player.ready===1 ? 'true' : 'false'}></img>
                                         </td>
                                         <td className="room-table-cell">
-                                            {(this.state.youAreHost) ? <FormButton type="kick" onClick={console.log('Kick Method is not developed yet!')}></FormButton> : ''}
-                                            {((this.state.youAreHost || player.username === this.Cookies.get('username') ) && !player.ready) ? <FormButton type="confirm" onClick={console.log('Player status confirmation method is not developed yet!')}></FormButton> : ''}
-                                            {(player.username === this.Cookies.get('username')) ? <FormButton type="disconnect" onClick={this.disconnectRoom}></FormButton> : ''}
+                                            {((this.state.youAreHost || player.username === this.Cookies.get('username') ) && player.ready) ? 
+                                                <FormButton 
+                                                    type="hold" 
+                                                    id={player.username} 
+                                                    onClick={this.resetReady}
+                                                ></FormButton>
+                                             : ''}
+                                            {((this.state.youAreHost || player.username === this.Cookies.get('username') ) && !player.ready) ? 
+                                                <FormButton 
+                                                    type="confirm"  
+                                                    id={player.username} 
+                                                    onClick={this.confirmReady}
+                                                ></FormButton> 
+                                            : ''}
+                                            {(this.state.youAreHost || player.username === this.Cookies.get('username')) ? 
+                                                <FormButton 
+                                                    type="disconnect" 
+                                                    id={player.username} 
+                                                    onClick={this.disconnectRoom}
+                                                ></FormButton> : ''}
                                         </td>
                                         <td className="room-table-cell">{player.rating}</td>
                                         <td className="room-table-cell"></td>
@@ -174,7 +222,7 @@ export default class Room extends React.Component{
                             </div>
                             <div className="close-room-button-container">
                                 <FormButton
-                                     type="Submit" 
+                                    type="Submit" 
                                     value="Close"
                                     id={this.state.roomDetails.roomId}
                                     onClick={this.closeRoom}

@@ -95,10 +95,10 @@
     color: white;
 }
 
-.form-button[type=kick]{
+.form-button[type=hold]{
     width: 33px;
     height: 29px;
-    background-image: url(./kick-icon.png);
+    background-image: url(./hold-icon.png);
     border: none;
     margin-right: 2px;
 }
