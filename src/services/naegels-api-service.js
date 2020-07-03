@@ -126,5 +126,18 @@ export default class NaegelsApi {
         return res
     };
 
+    startGame = async (token) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/game/start', 'POST', data);
+        return res
+    };
+
+    getGame = async (gameId) => {
+        const res = await this.apiCall('/game/' + gameId);
+        return res
+    };
+
 };
 

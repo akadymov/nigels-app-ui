@@ -1,0 +1,83 @@
+.game-console{
+    text-align: center;
+    position: absolute;
+    width: 48%;
+    height: 94%;
+    left: 2%;
+    top: 3%;
+}
+
+.game-console-header-div{
+    position: absolute;
+    width: 40%;
+    height: 30px;
+}
+
+.game-console-header{
+    font-family: calibri;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    color: #308552;
+}
+
+.game-console-button-div{
+    position: absolute;
+    width: 60%;
+    left: 40%;
+}
+
+.game-leaderboard-container{
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    height: 90%;
+    top: 10%;
+    overflow-y:scroll;
+    overflow-x:scroll;
+
+    outline: 1px solid #308552;
+    box-sizing: border-box;
+}
+
+.game-leaderboard-table{
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+    font-size: 14px;
+
+    border-collapse: collapse;
+}
+
+.game-leaderboard-header{
+    background: #2F3F35;
+    border: 1px #308552;
+    color: white;
+}
+
+.game-leaderboard-body{
+    color: #4EA470
+}
+
+tr:nth-child(even) {background-color: #E5E5E5;}
+
+.game-leaderboard-row{
+    height: 36px;
+}
+
+.game-leaderboard-cell{
+    padding-left: 10px;
+    border-top: 1px solid #929292;
+    text-align: left;
+}
+
+.game-table{
+    position: absolute;
+    width: 30%;
+    height: 85%;
+    left: 60%;
+    top: 5%;
+
+    background: #308552;
+    border-radius: 150px;
+}

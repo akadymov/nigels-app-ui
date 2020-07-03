@@ -25,6 +25,22 @@
     color: #FFFFFF;
 }
 
+.form-button[type=submit-small]{
+    margin-top: 14px;
+    height: 30px;
+    width: 200px;
+
+    background: #308552;
+    border: none;
+    border-radius: 5px;
+
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+
+    color: #FFFFFF;
+}
+
 .form-button[type=secondary]{
     margin-top: 14px;
     height: 30px;

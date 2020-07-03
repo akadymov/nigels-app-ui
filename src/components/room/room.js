@@ -16,7 +16,8 @@ export default class Room extends React.Component{
         this.state = {
             roomDetails: {
                 connectedUserList: [],
-                host: ''
+                host: '',
+                status: 'open'
             },
             startGameError: '',
             popupError: '',
@@ -65,7 +66,7 @@ export default class Room extends React.Component{
             if(body.errors) {
                 this.handleCreateRoomError(body)
             } else {
-                console.log(body)
+                window.location.replace('/game/' + body.gameId)
             }
         })
     }
@@ -237,7 +238,7 @@ export default class Room extends React.Component{
                                      type="Submit" 
                                      value="Start game"
                                      onClick={this.startGame}
-                                     disabled={this.Cookies.get('username') !== this.state.roomDetails.host}
+                                     disabled={this.Cookies.get('username') !== this.state.roomDetails.host || this.state.roomDetails.status !== 'open'}
                                 >
                                 </FormButton>
                             </div>
