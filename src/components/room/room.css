@@ -102,8 +102,8 @@ tr:nth-child(even) {background-color: #E5E5E5;}
 .username[host=true]{
     background-image: url(./host-icon.png);
     background-repeat: no-repeat;
-    background-position: 100px;
     margin: 0px;
+    padding-left: 20px;
 }
 
 .status[ready=true]{

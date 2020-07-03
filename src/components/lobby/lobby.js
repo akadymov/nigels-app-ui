@@ -7,7 +7,7 @@ import NaegelsApi from '../../services/naegels-api-service';
 import InputField from '../input-field';
 import FormButton from '../form-button';
 import ActiveFrame from '../active-frame';
-import ConfirmationPopup from '../confirmation-popup/confirmation-popup';
+import InfoPopup from '../info-popup';
 
 export default class Lobby extends React.Component{
 
@@ -133,7 +133,9 @@ export default class Lobby extends React.Component{
                                 <tbody className="lobby-table-body">
                                 {this.state.rooms.map(room => {return (
                                     <tr className="lobby-table-row">
-                                        <td className="lobby-table-cell">{room.roomName}</td>
+                                        <td className="lobby-table-cell">
+                                            <a className="room-href" href={'/lobby/room/' + room.roomId}>{room.roomName}</a>
+                                        </td>
                                         <td className="lobby-table-cell">{room.host}</td>
                                         <td className="lobby-table-cell">{room.created}</td>
                                         <td className="lobby-table-cell">{room.connectedUsers} / 10</td>
@@ -188,15 +190,10 @@ export default class Lobby extends React.Component{
                     </div>
                 </ActiveFrame>
                 {this.state.popupError !== '' ? 
-                    <div className="info-popup">
-                        <p className="error-message">{this.state.popupError}</p>
-                        <FormButton
-                            type="submit"
-                            value="OK"
-                            onClick={this.clearErrorMessage}
-                        >
-                        </FormButton>
-                    </div>
+                    <InfoPopup
+                        popupError={this.state.popupError}
+                        clearErrorMessage={this.clearErrorMessage}
+                    ></InfoPopup>
                 : ''}
             </div>
             

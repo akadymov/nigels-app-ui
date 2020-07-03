@@ -6,7 +6,8 @@ import NaegelsApi from '../../services/naegels-api-service';
 
 import FormButton from '../form-button';
 import ActiveFrame from '../active-frame';
-import ConfirmationPopup from '../confirmation-popup'
+import ConfirmationPopup from '../confirmation-popup';
+import InfoPopup from '../info-popup';
 
 export default class Room extends React.Component{
 
@@ -144,6 +145,7 @@ export default class Room extends React.Component{
         this.setState({popupError:""});
         this.setState({confirmAction:""});
         this.setState({confirmActionMsg:""});
+        this.GetRoomDetails();
     }
 
     redirect=() =>{
@@ -252,15 +254,10 @@ export default class Room extends React.Component{
                     </div>
                 </ActiveFrame>
                 {this.state.popupError !== '' ? 
-                    <div className="info-popup">
-                        <p className="error-message">{this.state.popupError}</p>
-                        <FormButton
-                            type="submit"
-                            value="OK"
-                            onClick={this.clearErrorMessage}
-                        >
-                        </FormButton>
-                    </div>
+                    <InfoPopup
+                        popupError={this.state.popupError}
+                        clearErrorMessage={this.clearErrorMessage}
+                    ></InfoPopup>
                 : ''}
                 {this.state.confirmActionMsg !== '' ? 
                     <ConfirmationPopup
