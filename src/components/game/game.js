@@ -15,8 +15,11 @@ export default class Game extends React.Component{
         super(props);
         this.state = {
             gameDetails: {
-                players:[]
+                players:[],
+                canDeal: false,
+                startedHands: []
             },
+            startedHands:[],
             popupError: '',
             confirmAction: '',
             confirmActionMsg: ''
@@ -40,10 +43,33 @@ export default class Game extends React.Component{
                 console.log('Something went wrong! Cannot get game status!')
             } else {
                 this.setState({gameDetails: body})
-                console.log(this.state.gameDetails.players)
             }
         });
     };
+
+    dealCards = () => {
+        this.NaegelsApi.dealCards(this.props.match.params.gameId, this.Cookies.get('idToken'))
+        .then((body) => {
+            if(body.errors) {
+                this.state.popupError = body.errors[0].message
+            }
+        });
+    };
+
+    definePositions = () => {
+        this.NaegelsApi.definePositions(this.props.match.params.gameId, this.Cookies.get('idToken'))
+        .then((body) => {
+            if(body.errors) {
+                console.log('Something went wrong! Cannot define positions!')
+            } else {
+                console.log(body)
+            }
+        });
+    };
+
+    startHand = () => {
+
+    }
 
     clearErrorMessage=(e) => {
         this.setState({popupError: ""});
@@ -66,10 +92,20 @@ export default class Game extends React.Component{
                     <div className="game-console">
                         <div className="game-console-header-div"><p className="game-console-header">Game Leaderboard</p></div>
                         <div className="game-console-button-div">
+                        {this.state.gameDetails.positionsDefined ? 
                             <FormButton
                                 type="submit-small"
                                 value="Deal cards"
+                                disabled={!this.state.gameDetails.canDeal}
+                                onClick={this.dealCards}
+                            ></FormButton> 
+                        :
+                            <FormButton
+                                type="submit-small"
+                                value="Define positions"
+                                onClick={this.definePositions}
                             ></FormButton>
+                        }
                         </div>
                         <div className="game-leaderboard-container">
                             <table className="game-leaderboard-table">
@@ -84,22 +120,24 @@ export default class Game extends React.Component{
                                     </tr>
                                 </thead>
                                 <tbody className="game-leaderboard-body">
-                                    <tr className="game-leaderboard-row">
-                                        <td className="game-leaderboard-cell">
-                                            trump
-                                        </td>
-                                        {this.state.gameDetails.players.map(player => {return (
-                                            <th className="game-leaderboard-cell">
-                                                {player.username.substring(0,(player.username.length > 15 ? 12 : 15)) + (player.username.length > 15 ? '...' : '')}
-                                            </th>
-                                        )})}
-                                    </tr>   
+                                    {this.state.gameDetails.startedHands.map(hand => {return (
+                                        <tr className="game-leaderboard-row">
+                                            <td className="game-leaderboard-cell">
+                                                {hand.dealtCardsPerPlayer} {hand.trump}
+                                            </td>
+                                            {this.state.gameDetails.players.map(player => {return (
+                                                <td className="game-leaderboard-cell">
+                                                    {player.username.substring(0,(player.username.length > 15 ? 12 : 15)) + (player.username.length > 15 ? '...' : '')}
+                                                </td>
+                                            )})}
+                                        </tr>   
+                                    )})}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <div className="game-table">
-                            
+                            <div className="my-cards-div"></div>
                     </div>
                 </ActiveFrame>
                 {this.state.popupError !== '' ? 

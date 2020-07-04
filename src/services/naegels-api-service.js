@@ -139,5 +139,21 @@ export default class NaegelsApi {
         return res
     };
 
+    dealCards = async (gameId, token) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/game/' + gameId + '/hand/deal', 'POST', data);
+        return res
+    };
+
+    definePositions = async (gameId, token) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/game/' + gameId + '/positions', 'POST', data);
+        return res
+    };
+
 };
 

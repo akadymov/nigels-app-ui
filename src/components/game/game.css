@@ -81,3 +81,10 @@ tr:nth-child(even) {background-color: #E5E5E5;}
     background: #308552;
     border-radius: 150px;
 }
+
+.my-cards-div{
+    background: black;
+    position: absolute;
+    height: 100px;
+    top:95%;
+}
