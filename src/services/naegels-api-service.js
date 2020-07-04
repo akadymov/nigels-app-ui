@@ -64,8 +64,8 @@ export default class NaegelsApi {
         return res
     };
 
-    getRooms = async () => {
-        const res = await this.apiCall('/room/all');
+    getRooms = async (closed=false) => {
+        const res = await this.apiCall('/room/all' + (closed ? '?closed=Y' : ''));
         return res
     };
 
@@ -152,6 +152,14 @@ export default class NaegelsApi {
             token: token
         };
         const res = await this.apiCall('/game/' + gameId + '/positions', 'POST', data);
+        return res
+    };
+
+    getCards = async (token, gameId, handId, burned=false) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/game/' + gameId + '/hand/' + handId + '/cards?burned=' + (burned ? 'y' : 'n'), 'POST', data);
         return res
     };
 

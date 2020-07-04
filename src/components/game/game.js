@@ -4,7 +4,7 @@ import './game.css'
 import Cookies from 'universal-cookie';
 import NaegelsApi from '../../services/naegels-api-service';
 
-import InputField from '../input-field';
+import OpenCard from '../open-card';
 import FormButton from '../form-button';
 import ActiveFrame from '../active-frame';
 import InfoPopup from '../info-popup';
@@ -19,6 +19,7 @@ export default class Game extends React.Component{
                 canDeal: false,
                 startedHands: []
             },
+            cardsInHand: [],
             startedHands:[],
             popupError: '',
             confirmAction: '',
@@ -40,9 +41,22 @@ export default class Game extends React.Component{
         this.NaegelsApi.getGame(this.props.match.params.gameId)
         .then((body) => {
             if(body.errors) {
-                console.log('Something went wrong! Cannot get game status!')
+                this.setState({ popupError: body.errors[0].message })
             } else {
                 this.setState({gameDetails: body})
+                var playerIndex = body.players.findIndex(element => element.username === this.Cookies.get('username') )
+                if(playerIndex){
+                    this.NaegelsApi.getCards(this.Cookies.get('idToken'), this.state.gameDetails.gameId, this.state.gameDetails.currentHandId)
+                    .then((body) => {
+                        if(body.errors) {
+                            this.setState({ popupError: body.errors[0].message })
+                        } else {
+                            this.setState({
+                                cardsInHand: body.cardsInHand
+                            })
+                        }
+                    })
+                }
             }
         });
     };
@@ -60,7 +74,7 @@ export default class Game extends React.Component{
         this.NaegelsApi.definePositions(this.props.match.params.gameId, this.Cookies.get('idToken'))
         .then((body) => {
             if(body.errors) {
-                console.log('Something went wrong! Cannot define positions!')
+                this.setState({ popupError: body.errors[0].message })
             } else {
                 console.log(body)
             }
@@ -96,7 +110,7 @@ export default class Game extends React.Component{
                             <FormButton
                                 type="submit-small"
                                 value="Deal cards"
-                                disabled={!this.state.gameDetails.canDeal}
+                                disabled={!this.state.gameDetails.canDeal}  
                                 onClick={this.dealCards}
                             ></FormButton> 
                         :
@@ -137,7 +151,11 @@ export default class Game extends React.Component{
                         </div>
                     </div>
                     <div className="game-table">
-                            <div className="my-cards-div"></div>
+                            <div className="my-cards-div">
+                                {this.state.cardsInHand.map(card => {return(
+                                    <OpenCard cardId={'card-' + card} index={this.state.cardsInHand.findIndex( el => el === card )}></OpenCard>
+                                )})}
+                            </div>
                     </div>
                 </ActiveFrame>
                 {this.state.popupError !== '' ? 
