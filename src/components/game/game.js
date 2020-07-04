@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie';
 import NaegelsApi from '../../services/naegels-api-service';
 
 import OpenCard from '../open-card';
+import ClosedCards from '../closed-cards';
 import FormButton from '../form-button';
 import ActiveFrame from '../active-frame';
 import InfoPopup from '../info-popup';
@@ -20,6 +21,7 @@ export default class Game extends React.Component{
                 startedHands: []
             },
             cardsInHand: [],
+            myPosition: 0,
             startedHands:[],
             popupError: '',
             confirmAction: '',
@@ -44,16 +46,21 @@ export default class Game extends React.Component{
                 this.setState({ popupError: body.errors[0].message })
             } else {
                 this.setState({gameDetails: body})
-                var playerIndex = body.players.findIndex(element => element.username === this.Cookies.get('username') )
-                if(playerIndex){
+                var playerIndex = this.state.gameDetails.players.findIndex(element => element.username === this.Cookies.get('username') )
+                console.log(this.Cookies.get('username'))
+                if(playerIndex>=0 && this.state.gameDetails.currentHandId){
                     this.NaegelsApi.getCards(this.Cookies.get('idToken'), this.state.gameDetails.gameId, this.state.gameDetails.currentHandId)
                     .then((body) => {
                         if(body.errors) {
                             this.setState({ popupError: body.errors[0].message })
                         } else {
                             this.setState({
-                                cardsInHand: body.cardsInHand
+                                cardsInHand: body.cardsInHand,
+                                myPosition: body.myPosition
                             })
+                            this.state.gameDetails.players.forEach(player => {
+                                
+                            });
                         }
                     })
                 }
@@ -65,7 +72,11 @@ export default class Game extends React.Component{
         this.NaegelsApi.dealCards(this.props.match.params.gameId, this.Cookies.get('idToken'))
         .then((body) => {
             if(body.errors) {
-                this.state.popupError = body.errors[0].message
+                this.setState({
+                    popupError : body.errors[0].message
+                })
+            } else{
+                this.GetGameStatus();
             }
         });
     };
@@ -76,14 +87,12 @@ export default class Game extends React.Component{
             if(body.errors) {
                 this.setState({ popupError: body.errors[0].message })
             } else {
-                console.log(body)
+                this.GetGameStatus();
             }
         });
     };
 
-    startHand = () => {
 
-    }
 
     clearErrorMessage=(e) => {
         this.setState({popupError: ""});
@@ -139,11 +148,13 @@ export default class Game extends React.Component{
                                             <td className="game-leaderboard-cell">
                                                 {hand.dealtCardsPerPlayer} {hand.trump}
                                             </td>
-                                            {this.state.gameDetails.players.map(player => {return (
-                                                <td className="game-leaderboard-cell">
-                                                    {player.username.substring(0,(player.username.length > 15 ? 12 : 15)) + (player.username.length > 15 ? '...' : '')}
-                                                </td>
-                                            )})}
+                                            {this.state.gameDetails.players.map(player => {
+                                                return (
+                                                    <td className="game-leaderboard-cell">
+                                                        {player.username.substring(0,(player.username.length > 15 ? 12 : 15)) + (player.username.length > 15 ? '...' : '')}
+                                                    </td>
+                                                )
+                                            })}
                                         </tr>   
                                     )})}
                                 </tbody>
@@ -151,11 +162,26 @@ export default class Game extends React.Component{
                         </div>
                     </div>
                     <div className="game-table">
-                            <div className="my-cards-div">
-                                {this.state.cardsInHand.map(card => {return(
-                                    <OpenCard cardId={'card-' + card} index={this.state.cardsInHand.findIndex( el => el === card )}></OpenCard>
-                                )})}
-                            </div>
+                        {this.state.gameDetails.players.map(player => {
+                            var position = player.position - this.state.myPosition
+                            if (position <= 0){
+                                position = position + this.state.gameDetails.players.length
+                            }
+                            if (player.username !== this.Cookies.get('username')) {
+                                return (
+                                    <div className="opponent-cards-div" position={'pos-' + position}>
+                                    <ClosedCards cards={player.cardsOnHand}></ClosedCards>
+                                </div>
+                                )
+                            } else{
+                                return('')
+                            }
+                        })}
+                        <div className="my-cards-div" style={{left: -15}}>
+                            {this.state.cardsInHand.map(card => {return(
+                                <OpenCard cardId={'card-' + card} index={this.state.cardsInHand.findIndex( el => el === card )}></OpenCard>
+                            )})}
+                        </div>
                     </div>
                 </ActiveFrame>
                 {this.state.popupError !== '' ? 

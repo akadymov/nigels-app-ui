@@ -83,8 +83,28 @@ tr:nth-child(even) {background-color: #E5E5E5;}
 }
 
 .my-cards-div{
-    background: black;
     position: absolute;
     height: 100px;
     top:90%;
+}
+
+.opponent-cards-div{
+    position: absolute;
+    height: 80px;
+    width: 100%;
+    text-align: center;
+}
+
+.opponent-cards-div[position=pos-1]{
+    top: 195px;
+    left: 132px;
+}
+
+.opponent-cards-div[position=pos-2]{
+    top: -25px;
+}
+
+.opponent-cards-div[position=pos-3]{
+    top: 195px;
+    left: -132px;
 }

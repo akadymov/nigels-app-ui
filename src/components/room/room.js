@@ -74,7 +74,7 @@ export default class Room extends React.Component{
     disconnectRoom = (e) => {
         const roomId = this.state.roomDetails.roomId
         const username = e.target.id
-        if(username==this.state.roomDetails.host){
+        if(username===this.state.roomDetails.host){
             this.setState({
                 confirmActionMsg: 'Are you sure you want to leave room? It will be closed since you are host',
                 confirmAction: this.confirmCloseRoom
@@ -83,7 +83,7 @@ export default class Room extends React.Component{
         this.NaegelsApi.disconnectRoom(this.Cookies.get('idToken'), roomId, username)
         .then((body) => {
             if(!body.errors){
-                if(username == this.Cookies.get('username')){
+                if(username === this.Cookies.get('username')){
                     window.location.replace('/lobby')
                 } else {
                     this.GetRoomDetails();
@@ -201,7 +201,7 @@ export default class Room extends React.Component{
                                             </p>
                                         </td>
                                         <td className="room-table-cell">
-                                            <img className="status" ready={player.ready===1 ? 'true' : 'false'}></img>
+                                            <img className="status" alt="status" ready={player.ready===1 ? 'true' : 'false'}></img>
                                         </td>
                                         <td className="room-table-cell">
                                             {((this.state.youAreHost || player.username === this.Cookies.get('username') ) && player.ready) ? 

@@ -5,10 +5,6 @@ import './info-popup.css'
 import FormButton from '../form-button'
 
 export default class InfoPopup extends React.Component{
-
-    constructor(props) {
-        super(props);
-    };
     
     render() {
         return(

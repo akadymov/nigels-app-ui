@@ -11,7 +11,15 @@ export default class OpenCard extends React.Component{
     
     render() {
         return (
-            <div className="open-card" cardId={this.props.cardId} style={{zindex: this.props.index, left: this.props.index*20, top: -this.props.index*100}}></div>
+            <div 
+                className="open-card" 
+                cardId={this.props.cardId} 
+                style={{
+                    zindex: this.props.index, 
+                    left: this.props.index*22, 
+                    top: -this.props.index*100
+                }}
+            ></div>
         )
     }
 }

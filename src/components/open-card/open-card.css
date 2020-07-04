@@ -16,8 +16,8 @@
 .open-card[cardId=card-jd]{
     background-image: url(./img/Jd.png);
 }
-.open-card[cardId=card-10d]{
-    background-image: url(./img/10d.png);
+.open-card[cardId=cardId-td]{
+    background-image: url(./img/td.png);
 }
 .open-card[cardId=card-9d]{
     background-image: url(./img/9d.png);
@@ -55,8 +55,8 @@
 .open-card[cardId=card-jh]{
     background-image: url(./img/Jh.png);
 }
-.open-card[cardId=card-10h]{
-    background-image: url(./img/10h.png);
+.open-card[cardId=cardId-th]{
+    background-image: url(./img/th.png);
 }
 .open-card[cardId=card-9h]{
     background-image: url(./img/9h.png);
@@ -94,8 +94,8 @@
 .open-card[cardId=card-js]{
     background-image: url(./img/Js.png);
 }
-.open-card[cardId=card-10s]{
-    background-image: url(./img/10s.png);
+.open-card[cardId=cardId-ts]{
+    background-image: url(./img/ts.png);
 }
 .open-card[cardId=card-9s]{
     background-image: url(./img/9s.png);
@@ -133,8 +133,8 @@
 .open-card[cardId=card-jc]{
     background-image: url(./img/Jc.png);
 }
-.open-card[cardId=card-10c]{
-    background-image: url(./img/10c.png);
+.open-card[cardId=card-tc]{
+    background-image: url(./img/tc.png);
 }
 .open-card[cardId=card-9c]{
     background-image: url(./img/9c.png);
