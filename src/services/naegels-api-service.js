@@ -163,5 +163,10 @@ export default class NaegelsApi {
         return res
     };
 
+    getHand = async (gameId, handId) => {
+        const res = await this.apiCall('/game/' + gameId + '/hand/' + handId);
+        return res
+    };
+
 };
 
