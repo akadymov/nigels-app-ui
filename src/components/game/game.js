@@ -28,7 +28,8 @@ export default class Game extends React.Component{
                 username: null,
                 betSize: null,
                 tookBets: null,
-                cardsOnHand: null
+                cardsOnHand: null,
+                actionMessage: ''
             },
             myPosition: 0,
             startedHands:[],
@@ -209,6 +210,9 @@ export default class Game extends React.Component{
                         </div>
                     </div>
                     <div className="game-table">
+                        <div className="action-info">
+                            <p className="action-info-message" error={this.state.popupError !== ''}>{this.state.handDetails.actionMessage}</p>
+                        </div>
                         {this.state.handDetails.players.map(player => {
                             var position = player.position - this.state.myPosition
                             if (position <= 0){
@@ -242,7 +246,7 @@ export default class Game extends React.Component{
                                 active={this.state.handDetails.nextActingPlayer === this.state.myInhandInfo.username ? 'true' : 'false'}
                             ></PlayerInfo>
                         </div>
-                        {(this.state.handDetails.nextActingPlayer === this.Cookies.get('username') && !this.state.gameDetails.currentTurnSerialNo) ? 
+                        {(this.state.handDetails.nextActingPlayer === this.Cookies.get('username') && !this.state.handDetails.betsAreMade) ? 
                             <BetSizePopup
                                 onChange={this.handleBetChange}
                                 onClick={this.clearErrorMessage}

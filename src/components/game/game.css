@@ -109,3 +109,29 @@ tr:nth-child(even) {background-color: #E5E5E5;}
     top: 195px;
     left: -132px;
 }
+
+.action-info{
+    position: absolute;
+    width: 165px;
+    height: 50px;
+    left: 50px;
+    top: 90px;
+
+    background: #31373D;
+    opacity: 0.8;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.action-info-message{
+    color: white;
+    opacity: 1;
+    font-family: calibri;
+    font-size: 12px;
+    line-height: 14px;
+    text-align: center;
+}
+
+.action-info-message[error=true]{
+    color: #FF0000;
+}
