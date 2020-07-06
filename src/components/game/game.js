@@ -9,12 +9,14 @@ import ClosedCards from '../closed-cards';
 import FormButton from '../form-button';
 import ActiveFrame from '../active-frame';
 import InfoPopup from '../info-popup';
-import PlayerInfo from '../player-info'
+import PlayerInfo from '../player-info';
+import BetSizePopup from '../betsize-popup';
 
 export default class Game extends React.Component{
 
     constructor(props) {
         super(props);
+        this.handleBetChange = this.handleBetChange.bind(this);
         this.state = {
             gameDetails: {
                 players:[],
@@ -33,6 +35,7 @@ export default class Game extends React.Component{
             popupError: '',
             confirmAction: '',
             confirmActionMsg: '',
+            myBetSizeValue: 0,
             handDetails: {
                 players: [],
                 nextActingPlayer: ''
@@ -66,7 +69,6 @@ export default class Game extends React.Component{
                         } else {
                             this.setState({handDetails: body})
                             var newGameDetails = this.state.gameDetails
-                            console.log(newGameDetails)
                             newGameDetails.players.forEach(player => {
                                 var handPlayerIndex = this.state.handDetails.players.findIndex(handPlayer => handPlayer.username === player.username)
                                 var gamePlayerIndex = newGameDetails.players.findIndex(gamePlayer => gamePlayer.username === player.username)
@@ -94,7 +96,6 @@ export default class Game extends React.Component{
                             }
                         })
                     }
-                    console.log(this.state)
                 }
             }
         });
@@ -102,6 +103,19 @@ export default class Game extends React.Component{
 
     dealCards = () => {
         this.NaegelsApi.dealCards(this.props.match.params.gameId, this.Cookies.get('idToken'))
+        .then((body) => {
+            if(body.errors) {
+                this.setState({
+                    popupError : body.errors[0].message
+                })
+            } else{
+                this.GetGameStatus();
+            }
+        });
+    };
+
+    makeBet = () => {
+        this.NaegelsApi.makeBet(this.Cookies.get('idToken'), this.state.gameDetails.gameId, this.state.gameDetails.currentHandId, this.state.myBetSizeValue)
         .then((body) => {
             if(body.errors) {
                 this.setState({
@@ -124,7 +138,9 @@ export default class Game extends React.Component{
         });
     };
 
-
+    handleBetChange(e) {
+        this.setState({myBetSizeValue: e.target.value})
+    };
 
     clearErrorMessage=(e) => {
         this.setState({popupError: ""});
@@ -140,7 +156,6 @@ export default class Game extends React.Component{
     render() {
 
         this.CheckIfAlreadyLoggedIn();
-        
         return (
             <div>
                 <ActiveFrame popupError={this.state.popupError} confirmActionMsg={this.state.confirmActionMsg}>
@@ -227,6 +242,15 @@ export default class Game extends React.Component{
                                 active={this.state.handDetails.nextActingPlayer === this.state.myInhandInfo.username ? 'true' : 'false'}
                             ></PlayerInfo>
                         </div>
+                        {(this.state.handDetails.nextActingPlayer === this.Cookies.get('username') && !this.state.gameDetails.currentTurnSerialNo) ? 
+                            <BetSizePopup
+                                onChange={this.handleBetChange}
+                                onClick={this.clearErrorMessage}
+                                value={this.state.myBetSizeValue}
+                                errorMessage={this.state.popupError}
+                                onSubmit={this.makeBet}
+                            ></BetSizePopup>
+                        : ''}
                     </div>
                 </ActiveFrame>
                 {this.state.popupError !== '' ? 

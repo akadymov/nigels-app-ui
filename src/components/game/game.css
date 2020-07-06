@@ -77,6 +77,7 @@ tr:nth-child(even) {background-color: #E5E5E5;}
     height: 85%;
     left: 60%;
     top: 5%;
+    text-align: center;
 
     background: #308552;
     border-radius: 150px;

@@ -168,5 +168,14 @@ export default class NaegelsApi {
         return res
     };
 
+    makeBet = async (token, gameId, handId, betSize) => {
+        const data = {
+            token: token,
+            betSize: betSize
+        };
+        const res = await this.apiCall('/game/' + gameId + '/hand/' + handId + '/turn/bet', 'POST', data);
+        return res
+    };
+
 };
 
