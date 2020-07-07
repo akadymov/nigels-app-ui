@@ -1,14 +1,14 @@
 .player-info{
     top:25px;
-    width: 100%;
+    width: 100px;
     height: 50px;
+    left: 25px;
     text-align: center;
     position: absolute;
 }
 
 .player-info-container{
     position: absolute;
-    left:85px;
     width: 100px;
     height: 50px;
     
@@ -66,4 +66,10 @@
     font-size: 12px;
     margin:0;
     padding:0;
+}
+
+.player-info[myinfo]{
+    left: 82px;
+    top: 55px;
+    z-index: 100;
 }

@@ -12,10 +12,10 @@ export default class PlayerInfo extends React.Component{
 
     render() {
         return(
-            <div className="player-info">
-                <div className="player-info-container" style={{top: this.props.myInfo ? 30 : 0}} active={this.props.active}>
+            <div className="player-info" myInfo={this.props.myInfo}>
+                <div className="player-info-container" active={this.props.active ? 'true' : 'false'}>
                     <div className="player-name">{this.props.username}</div>
-                    <div className="player-bet-size" active={this.props.active}>
+                    <div className="player-bet-size" active={this.props.active ? 'true' : 'false'}>
                         <p className="player-prop-header">
                             Bet size
                         </p>
@@ -23,7 +23,7 @@ export default class PlayerInfo extends React.Component{
                             {this.props.betSize}
                         </p>
                     </div>
-                    <div className="player-took-bets" active={this.props.active}>
+                    <div className="player-took-bets" active={this.props.active ? 'true' : 'false'}>
                         <p className="player-prop-header">
                             Took bets
                         </p>

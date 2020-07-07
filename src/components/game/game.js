@@ -41,7 +41,8 @@ export default class Game extends React.Component{
             myBetSizeValue: 0,
             handDetails: {
                 players: [],
-                nextActingPlayer: ''
+                nextActingPlayer: '',
+                cardsOnTable: []
             },
             selectedCard: ''
         }
@@ -198,7 +199,7 @@ export default class Game extends React.Component{
                                 value="Deal cards"
                                 disabled={!this.state.gameDetails.canDeal}  
                                 onClick={this.dealCards}
-                            ></FormButton> 
+                            ></FormButton>
                         :
                             <FormButton
                                 type="submit-small"
@@ -239,6 +240,17 @@ export default class Game extends React.Component{
                         </div>
                     </div>
                     <div className="game-table">
+                        {this.state.handDetails.cardsOnTable.map(cardOnTable => {
+                            if(cardOnTable.owner === this.state.myInhandInfo.username) {
+                                return(
+                                    <OpenCard
+                                        cardId={'card-' + cardOnTable.cardId}
+                                        cardOnTable="1"
+                                        index={4}
+                                    ></OpenCard>
+                                )
+                            }
+                        })}
                         <div className="action-info">
                             <p className="action-info-message" error={this.state.popupError !== ''}>{this.state.handDetails.actionMessage}</p>
                         </div>
@@ -261,17 +273,26 @@ export default class Game extends React.Component{
                                         <div 
                                             className="dealer-button" 
                                             style={
-                                                position/this.state.handDetails.players.length > 0.5 ? {left: 140} : (
-                                                    position/this.state.handDetails.players.length < 0.5 ? {left: 95, top: -40} : {left: 60}
+                                                position/this.state.handDetails.players.length > 0.5 ? {left: 85} : (
+                                                    position/this.state.handDetails.players.length < 0.5 ? {left: 20, top: -40} : {left: 30}
                                                 )}></div>
                                     : ''}
+                                    {this.state.handDetails.cardsOnTable.map(cardOnTable => {
+                                        if(cardOnTable.owner === player.username) {
+                                            return(
+                                                <OpenCard
+                                                    cardId={'card-' + cardOnTable.cardId}
+                                                    cardOnTable="1"
+                                                    index={position}
+                                                ></OpenCard>
+                                            )
+                                        }
+                                    })}
                                 </div>
                                 )
-                            } else{
-                                return('')
                             }
                         })}
-                        <div className="my-cards-div" style={{left: -15}}>
+                        <div className="my-cards-div">
                             {this.state.cardsInHand.map(card => {return(
                                 <OpenCard 
                                     cardId={'card-' + card}
@@ -281,11 +302,11 @@ export default class Game extends React.Component{
                                 ></OpenCard>
                             )})}
                             <PlayerInfo
-                                myInfo={true}
+                                myInfo="true"
                                 username={this.Cookies.get('username')}
                                 betSize={this.state.myInhandInfo.betSize ? this.state.myInhandInfo.betSize : null}
                                 tookBets={this.state.myInhandInfo.tookBets ? this.state.myInhandInfo.tookBets : null}
-                                active={this.state.handDetails.nextActingPlayer === this.state.myInhandInfo.username ? 'true' : 'false'}
+                                active={this.state.handDetails.nextActingPlayer === this.state.myInhandInfo.username}
                             ></PlayerInfo>
                             {this.state.myInhandInfo.dealer ? 
                                         <div 

@@ -4,6 +4,10 @@
     position: relative;
 }
 
+.open-card[cardontable=1]{
+    position: absolute;
+}
+
 .open-card[cardId=card-ad]{
     background-image: url(./img/Ad.png)
 }
