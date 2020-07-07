@@ -29,7 +29,8 @@ export default class Game extends React.Component{
                 betSize: null,
                 tookBets: null,
                 cardsOnHand: null,
-                actionMessage: ''
+                actionMessage: '',
+                dealer: false
             },
             myPosition: 0,
             startedHands:[],
@@ -228,6 +229,14 @@ export default class Game extends React.Component{
                                         tookBets={player.tookBets ? player.tookBets : null}
                                         active={this.state.handDetails.nextActingPlayer === player.username}
                                     ></PlayerInfo>
+                                    {player.dealer ? 
+                                        <div 
+                                            className="dealer-button" 
+                                            style={
+                                                position/this.state.handDetails.players.length > 0.5 ? {left: 140} : (
+                                                    position/this.state.handDetails.players.length < 0.5 ? {left: 95, top: -40} : {left: 60}
+                                                )}></div>
+                                    : ''}
                                 </div>
                                 )
                             } else{
@@ -245,6 +254,11 @@ export default class Game extends React.Component{
                                 tookBets={this.state.myInhandInfo.tookBets ? this.state.myInhandInfo.tookBets : null}
                                 active={this.state.handDetails.nextActingPlayer === this.state.myInhandInfo.username ? 'true' : 'false'}
                             ></PlayerInfo>
+                            {this.state.myInhandInfo.dealer ? 
+                                        <div 
+                                            className="dealer-button" 
+                                            style={{top: -40, left: 200}}></div>
+                                    : ''}
                         </div>
                         {(this.state.handDetails.nextActingPlayer === this.Cookies.get('username') && !this.state.handDetails.betsAreMade) ? 
                             <BetSizePopup
