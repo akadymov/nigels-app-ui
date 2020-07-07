@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './game.css'
+import './game.css';
 import Cookies from 'universal-cookie';
 import NaegelsApi from '../../services/naegels-api-service';
 
@@ -17,6 +17,7 @@ export default class Game extends React.Component{
     constructor(props) {
         super(props);
         this.handleBetChange = this.handleBetChange.bind(this);
+        this.selectCard = this.selectCard.bind(this);
         this.state = {
             gameDetails: {
                 players:[],
@@ -41,7 +42,8 @@ export default class Game extends React.Component{
             handDetails: {
                 players: [],
                 nextActingPlayer: ''
-            }
+            },
+            selectedCard: ''
         }
     };
 
@@ -140,6 +142,31 @@ export default class Game extends React.Component{
         });
     };
 
+    selectCard = (e) => {
+        const cardId = e.target.getAttribute('cardId').substring(5)
+        if( cardId !== this.state.selectedCard) {
+            this.setState({
+                selectedCard: cardId
+            })
+        } else {
+            console.log('Putting card ' + cardId)
+            this.NaegelsApi.putCard(
+                this.Cookies.get('idToken'),
+                this.state.gameDetails.gameId,
+                this.state.gameDetails.currentHandId,
+                cardId
+            )
+            .then((body) => {
+                if(body.errors) {
+                    this.setState({ popupError: body.errors[0].message })
+                } else {
+                    this.GetGameStatus();
+                }
+            })
+            this.GetGameStatus();
+        }
+    }
+
     handleBetChange(e) {
         this.setState({myBetSizeValue: e.target.value})
     };
@@ -158,6 +185,7 @@ export default class Game extends React.Component{
     render() {
 
         this.CheckIfAlreadyLoggedIn();
+        console.log(this.state)
         return (
             <div>
                 <ActiveFrame popupError={this.state.popupError} confirmActionMsg={this.state.confirmActionMsg}>
@@ -245,7 +273,12 @@ export default class Game extends React.Component{
                         })}
                         <div className="my-cards-div" style={{left: -15}}>
                             {this.state.cardsInHand.map(card => {return(
-                                <OpenCard cardId={'card-' + card} index={this.state.cardsInHand.findIndex( el => el === card )}></OpenCard>
+                                <OpenCard 
+                                    cardId={'card-' + card}
+                                    selectedCard={this.state.selectedCard}
+                                    index={this.state.cardsInHand.findIndex( el => el === card )}
+                                    onClick={ (this.state.handDetails.nextActingPlayer === this.state.myInhandInfo.username && this.state.handDetails.betsAreMade) ? this.selectCard : ''}
+                                ></OpenCard>
                             )})}
                             <PlayerInfo
                                 myInfo={true}

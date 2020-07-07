@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './open-card.css'
+import './open-card.css';
 
 export default class OpenCard extends React.Component{
 
@@ -13,11 +13,13 @@ export default class OpenCard extends React.Component{
         return (
             <div 
                 className="open-card" 
-                cardId={this.props.cardId} 
+                onClick={this.props.onClick}
+                cardId={this.props.cardId}
+                selectedCard={this.props.selectedCard}
                 style={{
                     zindex: this.props.index, 
                     left: this.props.index*22, 
-                    top: -this.props.index*100
+                    top: -this.props.index*100 - 38 * (this.props.selectedCard === this.props.cardId.substring(5) ? 1 : 0)
                 }}
             ></div>
         )

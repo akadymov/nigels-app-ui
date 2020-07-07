@@ -14,9 +14,9 @@
     background-image: url(./img/Qd.png);
 }
 .open-card[cardId=card-jd]{
-    background-image: url(./img/Jd.png);
+    background-image: url(./img/Jd.png);    
 }
-.open-card[cardId=cardId-td]{
+.open-card[cardId=card-td]{
     background-image: url(./img/td.png);
 }
 .open-card[cardId=card-9d]{
@@ -55,7 +55,7 @@
 .open-card[cardId=card-jh]{
     background-image: url(./img/Jh.png);
 }
-.open-card[cardId=cardId-th]{
+.open-card[cardId=card-th]{
     background-image: url(./img/th.png);
 }
 .open-card[cardId=card-9h]{
@@ -94,7 +94,7 @@
 .open-card[cardId=card-js]{
     background-image: url(./img/Js.png);
 }
-.open-card[cardId=cardId-ts]{
+.open-card[cardId=card-ts]{
     background-image: url(./img/ts.png);
 }
 .open-card[cardId=card-9s]{

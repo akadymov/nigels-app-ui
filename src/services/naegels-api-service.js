@@ -177,5 +177,13 @@ export default class NaegelsApi {
         return res
     };
 
+    putCard = async (token, gameId, handId, cardId) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/game/' + gameId + '/hand/' + handId + '/turn/card/put/' + cardId, 'POST', data);
+        return res
+    };
+
 };
 
