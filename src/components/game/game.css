@@ -42,9 +42,9 @@
 
 .game-leaderboard-table{
     text-align: center;
-    vertical-align: middle;
     width: 100%;
     font-size: 14px;
+    table-layout: fixed;
 
     border-collapse: collapse;
 }
@@ -63,12 +63,33 @@ tr:nth-child(even) {background-color: #E5E5E5;}
 
 .game-leaderboard-row{
     height: 36px;
+    border: 1px solid #929292;
+}
+
+.game-leaderboard-row[currHand=true]{
+    border: 1px solid #308552;
 }
 
 .game-leaderboard-cell{
+    width: 80px;
+    border-top: 1px solid #929292;
+    text-align: center;
+    padding: 0;
+    font-weight: normal;
+}
+
+.game-leaderboard-cell[itsme=true]{
+    font-weight: bolder;
+}
+
+.game-leaderboard-first-cell{
     padding-left: 10px;
+    width: 40px;
     border-top: 1px solid #929292;
     text-align: left;
+    vertical-align: middle;
+    padding: 0;
+    margin: 0;
 }
 
 .game-table{
@@ -144,4 +165,66 @@ tr:nth-child(even) {background-color: #E5E5E5;}
     width: 30px;
     height: 30px;
     top: 80px;
+}
+
+.cards-count{
+    width: 24px;
+    position: absolute;
+    padding-left: 5px;
+}
+
+.trump-icon{
+    position: absolute;
+    width: 14px;
+    height: 36px;
+    left:24px;
+    background-repeat: no-repeat;
+}
+
+.trump-icon[trump=d]{
+    background-image: url(./diamonds.png);
+}
+
+.trump-icon[trump=h]{
+    background-image: url(./hearts.png);
+}
+
+.trump-icon[trump=s]{
+    background-image: url(./spades.png);
+}
+
+.trump-icon[trump=c]{
+    background-image: url(./clubs.png);
+}
+
+.bet-size{
+    position: relative;
+    font-size: 10px;
+    width: 14px;
+    height: 14px;
+    top: 0px;
+    font-weight: inherit;
+    padding: 0px;
+    margin: 0px;
+    display: inline-block; 
+}
+
+.bet-size[bonus=true]{
+    margin-right: 5px;
+    border: 1px solid #308552;
+    border-radius: 50%;
+}
+
+.bet-size[bonus=true][itsme=true]{
+    border: 3px solid
+}
+
+.hand-score{
+    position: relative;
+    text-align: center;
+    display: inline-block; 
+    vertical-align: top;
+    width: 50px;
+    padding-left: 15px;
+    font-weight: inherit;
 }

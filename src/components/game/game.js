@@ -22,7 +22,8 @@ export default class Game extends React.Component{
             gameDetails: {
                 players:[],
                 canDeal: false,
-                startedHands: []
+                startedHands: [],
+                gameScores: []
             },
             cardsInHand: [],
             myInhandInfo: {
@@ -34,7 +35,6 @@ export default class Game extends React.Component{
                 dealer: false
             },
             myPosition: 0,
-            startedHands:[],
             popupError: '',
             confirmAction: '',
             confirmActionMsg: '',
@@ -212,29 +212,35 @@ export default class Game extends React.Component{
                             <table className="game-leaderboard-table">
                                 <thead className="game-leaderboard-header">
                                     <tr className="game-leaderboard-row">
-                                        <th className="game-leaderboard-cell"></th>
+                                        <th className="game-leaderboard-first-cell"></th>
                                         {this.state.gameDetails.players.map(player => {return (
-                                            <th className="game-leaderboard-cell">
+                                            <th className="game-leaderboard-cell" itsme={player.username===this.Cookies.get('username') ? 'true' : 'false'}>
                                                 {player.username.substring(0,(player.username.length > 15 ? 12 : 15)) + (player.username.length > 15 ? '...' : '')}
                                             </th>
                                         )})}
                                     </tr>
                                 </thead>
                                 <tbody className="game-leaderboard-body">
-                                    {this.state.gameDetails.startedHands.map(hand => {return (
-                                        <tr className="game-leaderboard-row">
-                                            <td className="game-leaderboard-cell">
-                                                {hand.dealtCardsPerPlayer} {hand.trump}
-                                            </td>
-                                            {this.state.gameDetails.players.map(player => {
-                                                return (
-                                                    <td className="game-leaderboard-cell">
-                                                        {player.username.substring(0,(player.username.length > 15 ? 12 : 15)) + (player.username.length > 15 ? '...' : '')}
-                                                    </td>
-                                                )
-                                            })}
-                                        </tr>   
-                                    )})}
+                                    {this.state.gameDetails.startedHands.map(hand => {
+                                        if(hand.handId !== 'totals') {return (
+                                            <tr className="game-leaderboard-row" currHand={this.state.gameDetails.currentHandId === hand.handId ? 'true' : 'false'}>
+                                                <td className="game-leaderboard-first-cell">
+                                                    <div className="cards-count">
+                                                        {hand.cardsPerPlayer}
+                                                    </div>
+                                                    <div className="trump-icon" trump={hand.trump}></div>
+                                                </td>
+                                                {hand.scores.map(score => {
+                                                    return (
+                                                        <td className="game-leaderboard-cell" itsme={score.username===this.Cookies.get('username') ? 'true' : 'false'}>
+                                                            <div className="hand-score">{score.score}</div>
+                                                            <div className="bet-size" bonus={score.bonus ? 'true' : 'false'}>{score.betSize}</div>
+                                                        </td>
+                                                    )
+                                                })}
+                                            </tr>   
+                                        )}
+                                    })}
                                 </tbody>
                             </table>
                         </div>
