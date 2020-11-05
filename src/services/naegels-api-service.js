@@ -64,8 +64,8 @@ export default class NaegelsApi {
         return res
     };
 
-    getRooms = async () => {
-        const res = await this.apiCall('/room/all');
+    getRooms = async (closed=false) => {
+        const res = await this.apiCall('/room/all' + (closed ? '?closed=Y' : ''));
         return res
     };
 
@@ -123,6 +123,65 @@ export default class NaegelsApi {
             username: username
         };
         const res = await this.apiCall('/room/' + roomId + '/ready/reset', 'POST', data);
+        return res
+    };
+
+    startGame = async (token) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/game/start', 'POST', data);
+        return res
+    };
+
+    getGame = async (gameId) => {
+        const res = await this.apiCall('/game/' + gameId);
+        return res
+    };
+
+    dealCards = async (gameId, token) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/game/' + gameId + '/hand/deal', 'POST', data);
+        return res
+    };
+
+    definePositions = async (gameId, token) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/game/' + gameId + '/positions', 'POST', data);
+        return res
+    };
+
+    getCards = async (token, gameId, handId, burned=false) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/game/' + gameId + '/hand/' + handId + '/cards?burned=' + (burned ? 'y' : 'n'), 'POST', data);
+        return res
+    };
+
+    getHand = async (gameId, handId) => {
+        const res = await this.apiCall('/game/' + gameId + '/hand/' + handId);
+        return res
+    };
+
+    makeBet = async (token, gameId, handId, betSize) => {
+        const data = {
+            token: token,
+            betSize: betSize
+        };
+        const res = await this.apiCall('/game/' + gameId + '/hand/' + handId + '/turn/bet', 'POST', data);
+        return res
+    };
+
+    putCard = async (token, gameId, handId, cardId) => {
+        const data = {
+            token: token
+        };
+        const res = await this.apiCall('/game/' + gameId + '/hand/' + handId + '/turn/card/put/' + cardId, 'POST', data);
         return res
     };
 

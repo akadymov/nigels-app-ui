@@ -3,10 +3,6 @@ import React from 'react';
 import './active-frame.css'
 
 export default class ActiveFrame extends React.Component{
-
-    constructor(props) {
-        super(props);
-    };
     
     render() {
         return (

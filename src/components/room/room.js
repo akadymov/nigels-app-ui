@@ -16,7 +16,9 @@ export default class Room extends React.Component{
         this.state = {
             roomDetails: {
                 connectedUserList: [],
-                host: ''
+                host: '',
+                status: 'open',
+                games: []
             },
             startGameError: '',
             popupError: '',
@@ -65,7 +67,7 @@ export default class Room extends React.Component{
             if(body.errors) {
                 this.handleCreateRoomError(body)
             } else {
-                console.log(body)
+                window.location.replace('/game/' + body.gameId)
             }
         })
     }
@@ -73,7 +75,7 @@ export default class Room extends React.Component{
     disconnectRoom = (e) => {
         const roomId = this.state.roomDetails.roomId
         const username = e.target.id
-        if(username==this.state.roomDetails.host){
+        if(username===this.state.roomDetails.host){
             this.setState({
                 confirmActionMsg: 'Are you sure you want to leave room? It will be closed since you are host',
                 confirmAction: this.confirmCloseRoom
@@ -82,7 +84,7 @@ export default class Room extends React.Component{
         this.NaegelsApi.disconnectRoom(this.Cookies.get('idToken'), roomId, username)
         .then((body) => {
             if(!body.errors){
-                if(username == this.Cookies.get('username')){
+                if(username === this.Cookies.get('username')){
                     window.location.replace('/lobby')
                 } else {
                     this.GetRoomDetails();
@@ -153,6 +155,10 @@ export default class Room extends React.Component{
             window.location.replace(this.state.nextUrl)
         }
     }
+
+    openRoom = (e) => {
+        this.setState({nextUrl:'/game/' + e.target.id})
+    }
     
     componentWillMount = () => {
         this.GetRoomDetails();
@@ -181,14 +187,6 @@ export default class Room extends React.Component{
                                         <th className="room-table-cell">Ready</th>
                                         <th className="room-table-cell">Actions</th>
                                         <th className="room-table-cell">Overall rating</th>
-                                        <th className="room-table-cell">
-                                            <FormButton
-                                                type="small-submit" 
-                                                value="Refresh" 
-                                                onClick={this.GetRoomDetails}
-                                            >   
-                                            </FormButton>
-                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="room-table-body">
@@ -200,7 +198,7 @@ export default class Room extends React.Component{
                                             </p>
                                         </td>
                                         <td className="room-table-cell">
-                                            <img className="status" ready={player.ready===1 ? 'true' : 'false'}></img>
+                                            <img className="status" alt="status" ready={player.ready===1 ? 'true' : 'false'}></img>
                                         </td>
                                         <td className="room-table-cell">
                                             {((this.state.youAreHost || player.username === this.Cookies.get('username') ) && player.ready) ? 
@@ -225,19 +223,47 @@ export default class Room extends React.Component{
                                                 ></FormButton> : ''}
                                         </td>
                                         <td className="room-table-cell">{player.rating}</td>
-                                        <td className="room-table-cell"></td>
                                     </tr>   
                                 )})}
                                 </tbody>
                             </table>
                         </div>
+                        <div className="games-table-container">     
+                            <table className="games-table">
+                                    <thead className="games-table-header">
+                                        <tr className="games-tabe-row">
+                                            <th className="games-table-cell" colSpan="2">
+                                                Games in room
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="games-table-body">
+                                        {this.state.roomDetails.games.map(game => {return(
+                                            <tr className="games-tabe-row">
+                                                <td className="games-table-cell">
+                                                    {'Game #' + game.id + ' (' + game.status + ')'}
+                                                </td>
+                                                <td className="games-table-cell">
+                                                    {game.status === 'open' ? 
+                                                        <FormButton 
+                                                            type="open"
+                                                            id={game.id}
+                                                            onClick={this.openRoom}
+                                                        ></FormButton>
+                                                    : ''}
+                                                </td>
+                                            </tr>
+                                        )})}
+                                    </tbody>
+                                </table>
+                        </div>
                         <div className="room-management-container">
                             <div className="start-game-button-container">
                                 <FormButton
                                      type="Submit" 
-                                     value="Start game"
+                                     value="Start new game"
                                      onClick={this.startGame}
-                                     disabled={this.Cookies.get('username') !== this.state.roomDetails.host}
+                                     disabled={this.Cookies.get('username') !== this.state.roomDetails.host || this.state.roomDetails.status !== 'open'}
                                 >
                                 </FormButton>
                             </div>

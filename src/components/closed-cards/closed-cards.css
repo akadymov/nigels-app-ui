@@ -1,0 +1,15 @@
+.closed-card{
+    position: relative;
+    width: 35px;
+    height: 50px;
+
+    background: url(./closed-cards.png);
+    border: 1px solid #929292;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.cards-container{
+    display: inline-block;
+    position: relative;
+}

@@ -6,6 +6,7 @@ import LoginForm from '../login-form';
 import { Switch, Route } from 'react-router-dom';
 import RegistrationForm from '../registration-form';
 import SuccessfullRegistration from '../successfull-registration';
+import Game from '../game';
 import Lobby from '../lobby';
 import Room from '../room';
 
@@ -17,6 +18,7 @@ const MainFrame = () => {
                 <AppHeader></AppHeader>
                 <Switch>
                     <Route path="/signin/:reason" component={LoginForm}></Route>
+                    <Route path="/game/:gameId" component={Game}></Route>
                     <Route path="/signout" component={LoginForm}></Route>
                     <Route path="/register" component={RegistrationForm}></Route>
                     <Route path="/registration-succeed/:username" component={SuccessfullRegistration}></Route>

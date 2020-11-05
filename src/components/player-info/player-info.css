@@ -1,0 +1,75 @@
+.player-info{
+    top:25px;
+    width: 100px;
+    height: 50px;
+    left: 25px;
+    text-align: center;
+    position: absolute;
+}
+
+.player-info-container{
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    
+    background: #E6E7E8;
+    border: 1px solid #929292;
+    box-sizing: border-box;
+    border-radius: 10px;
+    color: #929292;
+}
+
+.player-info-container[active=true]{
+    color: #FF0000;
+    border-color: #FF0000;
+}
+
+.player-name{
+    height: 50%;
+    width: 100%;
+    font-size: 18px;
+}
+
+.player-bet-size{
+    position: absolute;
+    top: 50%;
+    height: 50%;
+    width: 50%;
+    border-top: 1px solid #929292;
+    border-right: 1px solid #929292;
+}
+
+.player-took-bets{
+    position: absolute;
+    width: 50%;
+    top: 50%;
+    height: 50%;
+    border-top: 1px solid #929292;
+    left: 50%;
+}
+
+.player-bet-size[active=true], .player-took-bets[active=true]{
+    color: #FF0000;
+    border-color: #FF0000;
+}
+
+.player-prop-header{
+    height: 40%;
+    font-size: 10px;
+    margin:0;
+    padding:0;
+}
+
+.player-prop-value{
+    height: 60%;
+    top: 40%;
+    font-size: 12px;
+    margin:0;
+    padding:0;
+}
+
+.player-info[myinfo]{
+    left: 82px;
+    top: 55px;
+    z-index: 100;
+}

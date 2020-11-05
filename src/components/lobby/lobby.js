@@ -42,7 +42,7 @@ export default class Lobby extends React.Component{
             } else {
                 const newRooms = []
                 body.rooms.forEach(r => {
-                    r.created = r.created // TODO: format timestamp (firstly, convert all dates to numbers in server responses)
+                    //TODO: format created timestamp (firstly, convert all dates to numbers in server responses)
                     r.id = r.roomId
                     newRooms.push(r)
                 });

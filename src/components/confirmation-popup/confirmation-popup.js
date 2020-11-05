@@ -5,10 +5,6 @@ import './confirmation-popup.css'
 import FormButton from '../form-button'
 
 export default class ConfirmationPopup extends React.Component{
-
-    constructor(props) {
-        super(props);
-    };
     
     render() {
         return (

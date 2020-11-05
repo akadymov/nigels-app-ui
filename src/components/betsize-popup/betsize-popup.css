@@ -1,0 +1,32 @@
+.betsize-container{
+    position: absolute;
+    width: 150%;
+    height: 60px;
+    top: 70%;
+    left: -25%;
+
+    background: #FFFFFF;
+    border: 1px solid #308552;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.betsize-confirm{
+    position: absolute;
+    left: 40%;
+    width: 60%;
+    margin-top: 3px;
+}
+
+.betsize-input{
+    position: absolute;
+    width: 40%;
+    height: 100%;
+
+    font-family: calibri;
+    font-size: 18px;
+    padding: 17px;
+    display: flex;
+
+    color: #929292;
+}
