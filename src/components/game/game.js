@@ -122,7 +122,7 @@ export default class Game extends React.Component{
     };
 
     makeBet = () => {
-        this.NaegelsApi.makeBet(this.Cookies.get('idToken'), this.state.gameDetails.gameId, this.state.gameDetails.currentHandId, this.state.myBetSizeValue)
+        this.NaegelsApi.makeBet(this.Cookies.get('idToken'), this.state.gameDetails.gameId, this.state.gameDetails.currentHandId, parseInt(this.state.myBetSizeValue,10))
         .then((body) => {
             if(body.errors) {
                 this.setState({
@@ -195,6 +195,14 @@ export default class Game extends React.Component{
                 this.GetGameStatus()
             }
         });
+
+        roomSocket.on("exit_room", (data) => {
+            window.location.replace('/lobby')
+        });
+
+        const userConnected = this.state.gameDetails.players.findIndex(element => element.username === this.Cookies.get('username') ) >= 0
+
+        console.log('User is connected to game:' + userConnected)
 
         return (
             <div>
@@ -308,6 +316,7 @@ export default class Game extends React.Component{
                                 )
                             }
                         })}
+                        {userConnected ? 
                         <div className="my-cards-div">
                             {this.state.cardsInHand.map(card => {return(
                                 <OpenCard 
@@ -330,6 +339,7 @@ export default class Game extends React.Component{
                                             style={{top: -40, left: 200}}></div>
                                     : ''}
                         </div>
+                        : '' }
                         {(this.state.handDetails.nextActingPlayer === this.Cookies.get('username') && !this.state.handDetails.betsAreMade) ? 
                             <BetSizePopup
                                 onChange={this.handleBetChange}
