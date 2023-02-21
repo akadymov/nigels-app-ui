@@ -1,5 +1,9 @@
 import io from 'socket.io-client';
-const lobbySocket = io("http://localhost:5002/lobby");
-const roomSocket = io("http://localhost:5002/room");
+
+const socketHost = 'http://127.0.0.1'
+const socketPort = '5002'
+
+const lobbySocket = io(socketHost + ':' + socketPort + "/lobby");
+const roomSocket = io(socketHost + ':' + socketPort + "/room");
 
 export { lobbySocket, roomSocket }
