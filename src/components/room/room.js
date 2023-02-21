@@ -8,6 +8,7 @@ import FormButton from '../form-button';
 import ActiveFrame from '../active-frame';
 import ConfirmationPopup from '../confirmation-popup';
 import InfoPopup from '../info-popup';
+import { roomSocket, lobbySocket } from '../app/socket';
 
 export default class Room extends React.Component{
 
@@ -32,12 +33,15 @@ export default class Room extends React.Component{
     Cookies = new Cookies();
     NaegelsApi = new NaegelsApi();
 
+    
+
     CheckIfAlreadyLoggedIn = () => {
         const idToken = this.Cookies.get('idToken')
         if(!idToken) {
             window.location.replace('/signin/expired');
         }
     }
+    
 
     GetRoomDetails = () => {
         this.NaegelsApi.getRoom(this.props.match.params.roomId)
@@ -85,6 +89,8 @@ export default class Room extends React.Component{
         .then((body) => {
             if(!body.errors){
                 if(username === this.Cookies.get('username')){
+                    console.log(this.Cookies.get('username') & ' disconnecting from room #' & roomId);
+                    roomSocket.emit('disconnect_from_room', this.Cookies.get('username'), roomId)
                     window.location.replace('/lobby')
                 } else {
                     this.GetRoomDetails();
@@ -101,6 +107,8 @@ export default class Room extends React.Component{
         this.NaegelsApi.confirmReady(this.Cookies.get('idToken'), roomId, username)
         .then((body) => {
             if(!body.errors){
+                console.log(this.Cookies.get('username') & ' saying he/she is ready in room #' & roomId);
+                roomSocket.emit('ready', this.Cookies.get('username'), roomId)
                 this.GetRoomDetails();
             } else {
                 this.setState({popupError: body.errors[0].message})
@@ -114,6 +122,8 @@ export default class Room extends React.Component{
         this.NaegelsApi.resetReady(this.Cookies.get('idToken'), roomId, username)
         .then((body) => {
             if(!body.errors){
+                console.log(this.Cookies.get('username') & ' saying he/she is NOT ready in room #' & roomId);
+                roomSocket.emit('not_ready', this.Cookies.get('username'), roomId)
                 this.GetRoomDetails();
             } else {
                 this.setState({popupError: body.errors[0].message})
@@ -135,6 +145,9 @@ export default class Room extends React.Component{
             if(body.errors){
                 this.setState({popupError: body.errors[0].message})
             } else {
+                console.log('Closing room #' & roomId);
+                roomSocket.emit('close_room', roomId);
+                lobbySocket.emit('remove_room_from_lobby', roomId);
                 this.setState({popupError: 'Room with id ' + roomId + ' was successfully closed!'})
                 this.setState({nextUrl: '/lobby'})
                 console.log(this.state.nextUrl)
@@ -168,6 +181,17 @@ export default class Room extends React.Component{
 
         this.CheckIfAlreadyLoggedIn();
         this.redirect();
+
+        roomSocket.on("update_room", (data) => {
+            if(data.username != this.Cookies.get('username')){
+                this.GetRoomDetails()
+            }
+        });
+
+        roomSocket.on("exit_room", (data) => {
+            this.setState({nextUrl: '/lobby'})
+        });
+
         
         return (
             <div>

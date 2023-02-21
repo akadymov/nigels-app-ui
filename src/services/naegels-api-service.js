@@ -1,7 +1,7 @@
 export default class NaegelsApi {
 
     _apiHost = 'http://127.0.0.1'
-    _apiPort = '5000'
+    _apiPort = '5002'
     _apiContext = '/api/v1'
 
     status(response) {  

@@ -8,6 +8,10 @@ import InputField from '../input-field';
 import FormButton from '../form-button';
 import ActiveFrame from '../active-frame';
 import InfoPopup from '../info-popup';
+import { roomSocket, lobbySocket } from '../app/socket';
+
+
+
 
 export default class Lobby extends React.Component{
 
@@ -53,10 +57,13 @@ export default class Lobby extends React.Component{
     };
 
     connectRoom = (e) => {
+        // debugger;
         const roomId = e.target.id
         this.NaegelsApi.connectRoom(this.Cookies.get('idToken'), roomId)
         .then((body) => {
             if(!body.errors){
+                console.log(this.Cookies.get('username') & ' connecting to Room #' & roomId);
+                roomSocket.emit('connect_to_room', this.Cookies.get('username'), roomId)
                 window.location.replace('/lobby/room/' + roomId)
             } else {
                 this.setState({popupError: body.errors[0].message})
@@ -83,7 +90,9 @@ export default class Lobby extends React.Component{
             if(body.errors) {
                 this.handleCreateRoomError(body)
             } else {
-                window.location.replace('/lobby/room/' + body.roomId)
+                console.log('Creating room ' & this.state.newRoomName & '...');
+                lobbySocket.emit('create_room', this.state.newRoomName)
+                window.location.replace('/lobby/room/' + body.roomId);
             }
         })
     }
@@ -103,6 +112,11 @@ export default class Lobby extends React.Component{
     render() {
 
         this.CheckIfAlreadyLoggedIn();
+
+        lobbySocket.on('update_lobby', (data) => {
+            console.log('Updating lobby...')
+            this.GetRoomsList()
+        })
         
         return (
             <div>
