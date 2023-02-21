@@ -11,6 +11,7 @@ import ActiveFrame from '../active-frame';
 import InfoPopup from '../info-popup';
 import PlayerInfo from '../player-info';
 import BetSizePopup from '../betsize-popup';
+import { roomSocket, gameSocket } from '../../services/socket';
 
 export default class Game extends React.Component{
 
@@ -114,6 +115,7 @@ export default class Game extends React.Component{
                     popupError : body.errors[0].message
                 })
             } else{
+                gameSocket.emit('deal_cards', this.props.match.params.gameId)
                 this.GetGameStatus();
             }
         });
@@ -138,6 +140,7 @@ export default class Game extends React.Component{
             if(body.errors) {
                 this.setState({ popupError: body.errors[0].message })
             } else {
+                gameSocket.emit('define_positions', this.props.match.params.gameId)
                 this.GetGameStatus();
             }
         });
@@ -186,7 +189,13 @@ export default class Game extends React.Component{
     render() {
 
         this.CheckIfAlreadyLoggedIn();
-        console.log(this.state)
+
+        gameSocket.on('refresh_game_table', (data) => {
+            if(data.username != this.Cookies.get('username')){
+                this.GetGameStatus()
+            }
+        });
+
         return (
             <div>
                 <ActiveFrame popupError={this.state.popupError} confirmActionMsg={this.state.confirmActionMsg}>

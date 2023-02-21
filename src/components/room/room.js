@@ -71,6 +71,7 @@ export default class Room extends React.Component{
             if(body.errors) {
                 this.handleCreateRoomError(body)
             } else {
+                roomSocket.emit('start_game_in_room', body.gameId, this.props.match.params.roomId)
                 window.location.replace('/game/' + body.gameId)
             }
         })
@@ -190,6 +191,12 @@ export default class Room extends React.Component{
 
         roomSocket.on("exit_room", (data) => {
             this.setState({nextUrl: '/lobby'})
+        });
+
+        roomSocket.on("start_game", (data) => {
+            if(data.username != this.Cookies.get('username')){
+                this.setState({nextUrl: '/game/' + data.gameId})
+            }
         });
 
         

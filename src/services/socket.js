@@ -5,5 +5,6 @@ const socketPort = '5002'
 
 const lobbySocket = io(socketHost + ':' + socketPort + "/lobby");
 const roomSocket = io(socketHost + ':' + socketPort + "/room");
+const gameSocket = io(socketHost + ':' + socketPort + "/game");
 
-export { lobbySocket, roomSocket }
+export { lobbySocket, roomSocket, gameSocket }
