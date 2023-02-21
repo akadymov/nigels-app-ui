@@ -201,13 +201,6 @@ export default class Game extends React.Component{
                                 disabled={!this.state.gameDetails.canDeal}  
                                 onClick={this.dealCards}
                             ></FormButton>
-                        :
-                            <FormButton
-                                type="submit-small"
-                                value="Define positions"
-                                onClick={this.definePositions}
-                                disabled={this.state.gameDetails.canDeal} 
-                            ></FormButton>
                         }
                         </div>
                         <div className="game-leaderboard-container">
