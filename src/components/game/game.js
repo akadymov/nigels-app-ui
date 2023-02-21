@@ -65,7 +65,6 @@ export default class Game extends React.Component{
             if(body.errors) {
                 this.setState({ popupError: body.errors[0].message })
             } else {
-                console.log(body)
                 this.setState({gameDetails: body})
                 if(this.state.gameDetails.currentHandId) {
                     // get inhand players data
@@ -215,7 +214,7 @@ export default class Game extends React.Component{
                                 type="submit-small"
                                 value="Define positions"
                                 onClick={this.definePositions}
-                                disabled={this.state.gameDetails.canDeal} 
+                                disabled={this.state.gameDetails.canDeal}
                             ></FormButton>
                         }
                         </div>
