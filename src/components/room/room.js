@@ -8,7 +8,7 @@ import FormButton from '../form-button';
 import ActiveFrame from '../active-frame';
 import ConfirmationPopup from '../confirmation-popup';
 import InfoPopup from '../info-popup';
-import { roomSocket, lobbySocket } from '../app/socket';
+import { roomSocket, lobbySocket } from '../../services/socket';
 
 export default class Room extends React.Component{
 
