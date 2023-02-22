@@ -191,8 +191,7 @@ export default class Game extends React.Component{
 
         this.CheckIfAlreadyLoggedIn();
 
-        console.log(this.state.myInhandInfo)
-        console.log(this.state.nextActingPlayer)
+        console.log(this.state.handDetails)
 
         gameSocket.on('refresh_game_table', (data) => {
             if(data.username != this.Cookies.get('username')){
@@ -266,27 +265,23 @@ export default class Game extends React.Component{
                         </div>
                     </div>
                     <div className="game-table">
-                        {this.state.handDetails.cardsOnTable.map(cardOnTable => {
-                            if(cardOnTable.owner === this.state.myInhandInfo.username) {
+                        {this.state.handDetails.cardsOnTable.map((cardOnTable, cardIndex) => {
                                 return(
                                     <OpenCard
-                                        cardId={'card-' + cardOnTable.cardId}
+                                        cardId={'card-' + cardOnTable}
                                         cardOnTable="1"
-                                        index={4}
+                                        index={cardIndex + 1}
                                     ></OpenCard>
                                 )
-                            }
                         })}
                         <div className="action-info">
                             <p className="action-info-message" error={this.state.popupError !== ''}>{this.state.handDetails.actionMessage}</p>
                         </div>
                         {this.state.handDetails.players.map(player => {
-                            console.log(this.state.myPosition)
                             var position = player.position - this.state.myPosition
                             if (position <= 0){
                                 position = position + this.state.gameDetails.players.length
                             }
-                            console.log(position)
                             if (player.username !== this.Cookies.get('username')) {
                                 return (
                                     <div className="opponent-cards-div" position={'pos-' + position}>
