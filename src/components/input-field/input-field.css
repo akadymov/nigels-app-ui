@@ -41,7 +41,8 @@
 .input-field[id=username]{
     background-image: url(./user-outlined.png);
     background-repeat: no-repeat;
-    background-position: 13px;
+    background-position: 8px;
+    padding-left: 28px;
 }
 
 .input-field[id=username]:focus{
@@ -51,7 +52,8 @@
 .input-field[id=email]{
     background-image: url(./email-outlined.png);
     background-repeat: no-repeat;
-    background-position: 13px;
+    background-position: 8px;
+    padding-left: 28px;
 }
 
 .input-field[id=email]:focus{
@@ -74,7 +76,8 @@
 
     background-image: url(./lock-outlined.png);
     background-repeat: no-repeat;
-    background-position: 13px;
+    background-position: 8px;
+    padding-left: 28px;
 }
 
 .input-field[type=password]:focus{

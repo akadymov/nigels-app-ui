@@ -174,6 +174,7 @@ export default class Game extends React.Component{
     handleBetChange(e) {
         this.setState({myBetSizeValue: e.target.value})
     };
+    
 
     clearErrorMessage=(e) => {
         this.setState({popupError: ""});
@@ -214,7 +215,7 @@ export default class Game extends React.Component{
                             <FormButton
                                 type="submit-small"
                                 value="Deal cards"
-                                disabled={!this.state.gameDetails.canDeal}  
+                                disabled={!this.state.gameDetails.canDeal || this.state.gameDetails.host != this.Cookies.get('username')}  
                                 onClick={this.dealCards}
                             ></FormButton>
                         :
@@ -222,7 +223,7 @@ export default class Game extends React.Component{
                                 type="submit-small"
                                 value="Define positions"
                                 onClick={this.definePositions}
-                                disabled={this.state.gameDetails.canDeal}
+                                disabled={this.state.gameDetails.canDeal || this.state.gameDetails.host != this.Cookies.get('username')}
                             ></FormButton>
                         }
                         </div>

@@ -84,6 +84,13 @@ export default class Lobby extends React.Component{
         this.setState({newRoomError: body.errors[0].message});
     }
 
+    handleKeyPress = (event) => {
+        console.log(event)
+        if (event.key === 'Enter') {
+          this.createNewRoom();
+        }
+      };
+
     createNewRoom = () => {
         this.NaegelsApi.createRoom(this.Cookies.get('idToken'), this.state.newRoomName)
         .then((body) => {
@@ -91,7 +98,7 @@ export default class Lobby extends React.Component{
                 this.handleCreateRoomError(body)
             } else {
                 console.log('Creating room ' & this.state.newRoomName & '...');
-                lobbySocket.emit('create_room', this.state.newRoomName)
+                lobbySocket.emit('create_room', this.state.newRoomName, body.roomId)
                 window.location.replace('/lobby/room/' + body.roomId);
             }
         })
@@ -113,7 +120,7 @@ export default class Lobby extends React.Component{
 
         this.CheckIfAlreadyLoggedIn();
 
-        lobbySocket.on('update_lobby', (data) => {
+        lobbySocket.on('update_lobby', () => {
             console.log('Updating lobby...')
             this.GetRoomsList()
         })
@@ -180,7 +187,7 @@ export default class Lobby extends React.Component{
                             </table>
                         </div>
                         <div className="lobby-management-container">
-                            <div className="room-name-input-container">
+                            <div className="room-name-input-container" onKeyPress={this.handleKeyPress}>
                                 <InputField
                                     type="text"
                                     id="roomName"

@@ -34,7 +34,6 @@ export default class Room extends React.Component{
     NaegelsApi = new NaegelsApi();
 
     
-
     CheckIfAlreadyLoggedIn = () => {
         const idToken = this.Cookies.get('idToken')
         if(!idToken) {
@@ -69,7 +68,7 @@ export default class Room extends React.Component{
         this.NaegelsApi.startGame(this.Cookies.get('idToken'), this.state.newRoomName)
         .then((body) => {
             if(body.errors) {
-                this.handleCreateRoomError(body)
+                this.setState({popupError: body.errors[0].message})
             } else {
                 roomSocket.emit('start_game_in_room', body.gameId, this.props.match.params.roomId)
                 window.location.replace('/game/' + body.gameId)
@@ -80,18 +79,18 @@ export default class Room extends React.Component{
     disconnectRoom = (e) => {
         const roomId = this.state.roomDetails.roomId
         const username = e.target.id
-        if(username===this.state.roomDetails.host){
-            this.setState({
-                confirmActionMsg: 'Are you sure you want to leave room? It will be closed since you are host',
-                confirmAction: this.confirmCloseRoom
-            })
-        }
+        //if(username===this.state.roomDetails.host){
+        //    this.setState({
+        //        confirmActionMsg: 'Are you sure you want to leave room? It will be closed since you are host',
+        //        confirmAction: this.confirmCloseRoom
+        //    })
+        //}
         this.NaegelsApi.disconnectRoom(this.Cookies.get('idToken'), roomId, username)
         .then((body) => {
             if(!body.errors){
+                console.log(this.Cookies.get('username') & ' disconnecting from room #' & roomId);
+                roomSocket.emit('disconnect_from_room', username, roomId)
                 if(username === this.Cookies.get('username')){
-                    console.log(this.Cookies.get('username') & ' disconnecting from room #' & roomId);
-                    roomSocket.emit('disconnect_from_room', this.Cookies.get('username'), roomId)
                     window.location.replace('/lobby')
                 } else {
                     this.GetRoomDetails();
@@ -109,7 +108,7 @@ export default class Room extends React.Component{
         .then((body) => {
             if(!body.errors){
                 console.log(this.Cookies.get('username') & ' saying he/she is ready in room #' & roomId);
-                roomSocket.emit('ready', this.Cookies.get('username'), roomId)
+                roomSocket.emit('ready', username, roomId)
                 this.GetRoomDetails();
             } else {
                 this.setState({popupError: body.errors[0].message})
@@ -124,7 +123,7 @@ export default class Room extends React.Component{
         .then((body) => {
             if(!body.errors){
                 console.log(this.Cookies.get('username') & ' saying he/she is NOT ready in room #' & roomId);
-                roomSocket.emit('not_ready', this.Cookies.get('username'), roomId)
+                roomSocket.emit('not_ready', username, roomId)
                 this.GetRoomDetails();
             } else {
                 this.setState({popupError: body.errors[0].message})
@@ -184,13 +183,16 @@ export default class Room extends React.Component{
         this.redirect();
 
         roomSocket.on("update_room", (data) => {
-            if(data.username != this.Cookies.get('username')){
-                this.GetRoomDetails()
-            }
+            this.GetRoomDetails()
         });
 
         roomSocket.on("exit_room", (data) => {
-            this.setState({nextUrl: '/lobby'})
+            if(data.username === 0 || data.username === this.Cookies.get('username')){
+                console.log(data.username + ' vs ' + this.Cookies.get('username'))
+                this.setState({nextUrl: '/lobby'})
+            } else {
+                this.GetRoomDetails()
+            }
         });
 
         roomSocket.on("start_game", (data) => {
@@ -238,21 +240,21 @@ export default class Room extends React.Component{
                                             <img className="status" alt="status" ready={player.ready===1 ? 'true' : 'false'}></img>
                                         </td>
                                         <td className="room-table-cell">
-                                            {((this.state.youAreHost || player.username === this.Cookies.get('username') ) && player.ready) ? 
+                                            {((!this.state.youAreHost && player.username === this.Cookies.get('username') || this.state.youAreHost && player.username != this.Cookies.get('username')) && player.ready) ? 
                                                 <FormButton 
                                                     type="hold" 
                                                     id={player.username} 
                                                     onClick={this.resetReady}
                                                 ></FormButton>
                                              : ''}
-                                            {((this.state.youAreHost || player.username === this.Cookies.get('username') ) && !player.ready) ? 
+                                            {((!this.state.youAreHost && player.username === this.Cookies.get('username') || this.state.youAreHost && player.username != this.Cookies.get('username') ) && !player.ready) ? 
                                                 <FormButton 
                                                     type="confirm"  
                                                     id={player.username} 
                                                     onClick={this.confirmReady}
                                                 ></FormButton> 
                                             : ''}
-                                            {(this.state.youAreHost || player.username === this.Cookies.get('username')) ? 
+                                            {(!this.state.youAreHost && player.username === this.Cookies.get('username') || this.state.youAreHost && player.username != this.Cookies.get('username')) ? 
                                                 <FormButton 
                                                     type="disconnect" 
                                                     id={player.username} 

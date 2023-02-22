@@ -18,8 +18,8 @@ export default class LoginForm extends React.Component{
         this.CheckIfAlreadyLoggedIn = this.CheckIfAlreadyLoggedIn.bind(this);
         this.state = {
             textFieldsList: [
-                {id:"username", name:"username", type: "text", placeholder: "Username", onChange: this.handleUsernameChange, errorMessage: "", value: ""},
-                {id:"password", name:"password", type: "password", placeholder: "Password", onChange: this.handlePasswordChange, errorMessage: "", value: ""}
+                {id:"username", name:"username", type: "text", placeholder: "Username      ", onChange: this.handleUsernameChange, errorMessage: "", value: ""},
+                {id:"password", name:"password", type: "password", placeholder: "Password      ", onChange: this.handlePasswordChange, errorMessage: "", value: ""}
             ],
             email:'',
             password:'',
@@ -50,8 +50,10 @@ export default class LoginForm extends React.Component{
         )
         .then((body) => {
             if(body.errors) {
+                console.log('Login error')
                 this.handleErrorResponse(body)
             } else {
+                console.log('login error')
                 var currentDate = new Date(); 
                 var expiresIn = new Date(currentDate.getTime() + body.expiresIn * 1000)
                 this.Cookies.set('idToken', body.token, { path: '/' , expires: expiresIn})
@@ -89,6 +91,13 @@ export default class LoginForm extends React.Component{
         this.setState({textFieldsList: textFieldsListUpdated});
     }
 
+    handleKeyPress = (event) => {
+        console.log(event)
+        if (event.key === 'Enter') {
+          this.SendLoginRequest();
+        }
+      };
+
     render() {
       
         if(this.props.location.pathname === '/signout') {
@@ -100,7 +109,7 @@ export default class LoginForm extends React.Component{
         return (
             <div>
                 <div className="login-active-frame">
-                    <div className="login-form">
+                    <div className="login-form" onKeyPress={this.handleKeyPress}>
                     {this.props.match.params.reason==='expired' ? <p className="errorDiv"><b>You have to sign in to access application</b></p> : ''}
                     {this.state.textFieldsList.map(field => {
                                 return <InputField

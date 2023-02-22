@@ -23,10 +23,10 @@ export default class RegistrationForm extends React.Component{
             username:'',
             preferredLang: '',
             textFieldsList: [
-                {id:"username", name:"username", type: "text", placeholder: "Username", onChange: this.handleUsernameChange, errorMessage: "", value: ""},
-                {id:"email", name:"email", type: "text", placeholder: "Email", onChange: this.handleEmailChange, errorMessage: "", value: ""},
-                {id:"password", name:"password", type: "password", placeholder: "Password", onChange: this.handlePasswordChange, errorMessage: "", value: ""},
-                {id:"repeatPassword", name:"repeatPassword", type: "password", placeholder: "Repeat password", onChange: this.handleRepeatPasswordChange, errorMessage: "", value: ""}
+                {id:"username", name:"username", type: "text", placeholder: "Username      ", onChange: this.handleUsernameChange, errorMessage: "", value: ""},
+                {id:"email", name:"email", type: "text", placeholder: "Email      ", onChange: this.handleEmailChange, errorMessage: "", value: ""},
+                {id:"password", name:"password", type: "password", placeholder: "Password      ", onChange: this.handlePasswordChange, errorMessage: "", value: ""},
+                {id:"repeatPassword", name:"repeatPassword", type: "password", placeholder: "Repeat password   ", onChange: this.handleRepeatPasswordChange, errorMessage: "", value: ""}
             ],
             languages: [
                 {type:"radio", id:"preferred-lang-en", name:"preferred-lang", lang:"en", errorMessage:""},
@@ -93,12 +93,19 @@ export default class RegistrationForm extends React.Component{
         this.setState({textFieldsList: textFieldsListUpdated});
     }
 
+    handleKeyPress = (event) => {
+        console.log(event)
+        if (event.key === 'Enter') {
+          this.SendRegRequest();
+        }
+      };
+
     render() {
 
         return (
                 <div>
                     <div className="registration-active-frame">
-                        <div className="registration-form">
+                        <div className="registration-form" onKeyPress={this.handleKeyPress}>
                             {this.state.textFieldsList.map(field => {
                                 return <InputField
                                     type={field.type}
