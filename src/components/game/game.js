@@ -191,7 +191,8 @@ export default class Game extends React.Component{
 
         this.CheckIfAlreadyLoggedIn();
 
-        console.log(this.state.handDetails)
+        console.log(this.state.myInhandInfo)
+        console.log(this.state.nextActingPlayer)
 
         gameSocket.on('refresh_game_table', (data) => {
             if(data.username != this.Cookies.get('username')){
