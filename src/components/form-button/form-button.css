@@ -11,6 +11,7 @@
 
 .form-button[type=submit]{
     margin-top: 35px;
+    margin-bottom: 35px;
     height: 40px;
     width: 250px;
 
