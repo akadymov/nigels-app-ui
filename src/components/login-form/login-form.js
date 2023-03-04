@@ -70,7 +70,6 @@ export default class LoginForm extends React.Component{
     handlePasswordChange=(e) => {
         this.setState({password: e.target.value})
     };
-
     
     handleErrorResponse(body) {
         let textFieldsListUpdated = [...this.state.textFieldsList]
@@ -82,14 +81,14 @@ export default class LoginForm extends React.Component{
             textFieldsListUpdated[elementsIndex] = {...textFieldsListUpdated[elementsIndex], errorMessage: er.message}
         });
         this.setState({textFieldsList: textFieldsListUpdated});
-    }
+    };
 
     clearErrorMessage=(e) => {
         let textFieldsListUpdated = [...this.state.textFieldsList]
         var elementsIndex = this.state.textFieldsList.findIndex(element => element.id === e.target.id )
         textFieldsListUpdated[elementsIndex] = {...textFieldsListUpdated[elementsIndex], errorMessage: ""}
         this.setState({textFieldsList: textFieldsListUpdated});
-    }
+    };
 
     handleKeyPress = (event) => {
         console.log(event)

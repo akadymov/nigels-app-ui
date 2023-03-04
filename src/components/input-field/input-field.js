@@ -7,7 +7,7 @@ const InputField = ({type, id, name, placeholder, value, onChange, errorMessage,
     const status = errorMessage==='' ? 'active' : 'error'
 
     var errorDiv = ''
-    if (status==='error') {
+    if (status==='error' & errorMessage.length > 0) {
         errorDiv = <div className="error-div">{errorMessage}</div>;
     }
 
