@@ -50,10 +50,8 @@ export default class LoginForm extends React.Component{
         )
         .then((body) => {
             if(body.errors) {
-                console.log('Login error')
                 this.handleErrorResponse(body)
             } else {
-                console.log('login error')
                 var currentDate = new Date(); 
                 var expiresIn = new Date(currentDate.getTime() + body.expiresIn * 1000)
                 this.Cookies.set('idToken', body.token, { path: '/' , expires: expiresIn})
@@ -91,7 +89,6 @@ export default class LoginForm extends React.Component{
     };
 
     handleKeyPress = (event) => {
-        console.log(event)
         if (event.key === 'Enter') {
           this.SendLoginRequest();
         }

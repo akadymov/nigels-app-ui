@@ -126,6 +126,7 @@ export default class Game extends React.Component{
                 })
             } else{
                 gameSocket.emit('deal_cards', this.props.match.params.gameId)
+                console.log('deal_cards')
                 this.GetGameStatus();
             }
         });
@@ -141,6 +142,7 @@ export default class Game extends React.Component{
                 })
             } else{
                 gameSocket.emit('deal_cards', this.props.match.params.gameId)
+                console.log('deal_cards')
                 this.GetGameStatus();
             }
         });
@@ -156,8 +158,12 @@ export default class Game extends React.Component{
                     gameDetails: newGameDetails
                 })
             } else {
-                gameSocket.emit('define_positions', this.props.match.params.gameId)
-                this.GetGameStatus();
+                gameSocket.emit('define_positions', this.props.match.params.gameId, body.players)
+                var newGameDetails = this.state.gameDetails
+                newGameDetails.positionsDefined = true
+                newGameDetails.canDeal = true
+                newGameDetails.players = body.players
+                this.setState({ gameDetails: newGameDetails })
             }
         });
     };
@@ -169,7 +175,6 @@ export default class Game extends React.Component{
                 selectedCard: cardId
             })
         } else {
-            console.log('Putting card ' + cardId)
             this.NaegelsApi.putCard(
                 this.Cookies.get('idToken'),
                 this.state.gameDetails.gameId,
@@ -184,6 +189,7 @@ export default class Game extends React.Component{
                     })
                 } else {
                     gameSocket.emit('deal_cards', this.props.match.params.gameId)
+                    console.log('deal_cards')
                     this.GetGameStatus();
                 }
             })
@@ -207,19 +213,32 @@ export default class Game extends React.Component{
       }
 
     render() {
+        console.log(this.state.gameDetails)
 
         this.CheckIfAlreadyLoggedIn();
 
-        console.log(this.state.gameDetails)
-
         gameSocket.on('refresh_game_table', (data) => {
-            if(data.username != this.Cookies.get('username')){
-                this.GetGameStatus()
+            if(parseInt(data.gameId) === parseInt(this.props.match.params.gameId)){
+                if(data.username != this.Cookies.get('username')){
+                    if(data.event === 'define positions'){
+                        var newGameDetails = this.state.gameDetails
+                        newGameDetails.players = data.players
+                        newGameDetails.positionsDefined = true
+                        newGameDetails.canDeal = true
+                        this.setState({ gameDetails: newGameDetails })
+                    } else {
+                        if(data.event === 'deal cards'){
+                            this.GetGameStatus();
+                        }
+                    }
+                }
             }
         });
 
         roomSocket.on("exit_room", (data) => {
-            window.location.replace('/lobby')
+            if(parseInt(data.gameId) === parseInt(this.props.match.params.gameId)){
+                window.location.replace('/lobby')
+            }
         });
 
         const userConnected = this.state.gameDetails.players.findIndex(element => element.username === this.Cookies.get('username') ) >= 0

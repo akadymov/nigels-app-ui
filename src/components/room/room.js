@@ -49,7 +49,6 @@ export default class Room extends React.Component{
                 console.log('Something went wrong! Cannot get rooms list!')
             } else {
                 this.setState({roomDetails: body})
-                console.log(this.state.roomDetails.connectedUserList)
                 if(body.host === this.Cookies.get('username')) {
                     this.setState({youAreHost: true})
                 }
@@ -70,14 +69,17 @@ export default class Room extends React.Component{
             if(body.errors) {
                 this.setState({popupError: body.errors[0].message})
             } else {
-                roomSocket.emit('start_game_in_room', body.gameId, this.props.match.params.roomId)
-                window.location.replace('/game/' + body.gameId)
+                roomSocket.emit('start_game_in_room', this.Cookies.get('username'), body.gameId, this.props.match.params.roomId)
+                setTimeout(function(){
+                    window.location.replace('/game/' + body.gameId)
+                }, 1000)
             }
         })
     }
 
     disconnectRoom = (e) => {
         const roomId = this.state.roomDetails.roomId
+        const roomName = this.state.roomDetails.roomName
         const username = e.target.id
         //if(username===this.state.roomDetails.host){
         //    this.setState({
@@ -88,12 +90,17 @@ export default class Room extends React.Component{
         this.NaegelsApi.disconnectRoom(this.Cookies.get('idToken'), roomId, username)
         .then((body) => {
             if(!body.errors){
-                console.log(this.Cookies.get('username') & ' disconnecting from room #' & roomId);
-                roomSocket.emit('disconnect_from_room', username, roomId)
+                roomSocket.emit('remove_player_from_room', this.Cookies.get('username'), username, roomId, roomName, body.connectedUsers)
+                lobbySocket.emit('decrease_room_players', this.Cookies.get('username'), username, roomId, roomName, body.connectedUsers)
                 if(username === this.Cookies.get('username')){
                     window.location.replace('/lobby')
                 } else {
-                    this.GetRoomDetails();
+                    var newRoomDetails = this.state.roomDetails
+                    var disconnectedUserIndex = newRoomDetails.connectedUserList.findIndex(element => element.username === username )
+                    if (disconnectedUserIndex > 0){
+                        newRoomDetails.connectedUserList.splice(disconnectedUserIndex,1)
+                        this.setState({ roomDetails: newRoomDetails })
+                    }
                 }
             } else {
                 this.setState({popupError: body.errors[0].message})
@@ -107,9 +114,11 @@ export default class Room extends React.Component{
         this.NaegelsApi.confirmReady(this.Cookies.get('idToken'), roomId, username)
         .then((body) => {
             if(!body.errors){
-                console.log(this.Cookies.get('username') & ' saying he/she is ready in room #' & roomId);
-                roomSocket.emit('ready', username, roomId)
-                this.GetRoomDetails();
+                var newRoomDetails = this.state.roomDetails
+                var targetUserUpdated = newRoomDetails.connectedUserList.findIndex(element => element.username === username )
+                newRoomDetails.connectedUserList[targetUserUpdated].ready = 1
+                this.setState({roomDetails: newRoomDetails})
+                roomSocket.emit('ready', this.Cookies.get('username'), username, roomId)
             } else {
                 this.setState({popupError: body.errors[0].message})
             }
@@ -122,9 +131,11 @@ export default class Room extends React.Component{
         this.NaegelsApi.resetReady(this.Cookies.get('idToken'), roomId, username)
         .then((body) => {
             if(!body.errors){
-                console.log(this.Cookies.get('username') & ' saying he/she is NOT ready in room #' & roomId);
-                roomSocket.emit('not_ready', username, roomId)
-                this.GetRoomDetails();
+                var newRoomDetails = this.state.roomDetails
+                var targetUserUpdated = newRoomDetails.connectedUserList.findIndex(element => element.username === username )
+                newRoomDetails.connectedUserList[targetUserUpdated].ready = 0
+                this.setState({roomDetails: newRoomDetails})
+                roomSocket.emit('not_ready', this.Cookies.get('username'), username, roomId)
             } else {
                 this.setState({popupError: body.errors[0].message})
             }
@@ -140,17 +151,18 @@ export default class Room extends React.Component{
 
     confirmCloseRoom = () => {
         const roomId = this.state.roomDetails.roomId
+        const roomName = this.state.roomDetails.roomName
         this.NaegelsApi.closeRoom(this.Cookies.get('idToken'), roomId)
         .then((body) => {
             if(body.errors){
                 this.setState({popupError: body.errors[0].message})
             } else {
-                console.log('Closing room #' & roomId);
-                roomSocket.emit('close_room', roomId);
-                lobbySocket.emit('remove_room_from_lobby', roomId);
-                this.setState({popupError: 'Room with id ' + roomId + ' was successfully closed!'})
-                this.setState({nextUrl: '/lobby'})
-                console.log(this.state.nextUrl)
+                roomSocket.emit('close_room', this.Cookies.get('username'), roomName);
+                lobbySocket.emit('remove_room_from_lobby', roomName);
+                this.setState({popupError: 'Room "' + roomName + '" was successfully closed!'})
+                setTimeout(function(){
+                    window.location.replace('/lobby' + roomId)
+                }, 1000)
             }
         });
     }
@@ -183,12 +195,56 @@ export default class Room extends React.Component{
         this.redirect();
 
         roomSocket.on("update_room", (data) => {
-            this.GetRoomDetails()
+            if(this.Cookies.get('username') != data.actor){
+                if(data.roomId && data.username){
+                    if(parseInt(data.roomId) === parseInt(this.state.roomDetails.roomId)){
+                        if(data.event === 'ready'){
+                            var newRoomDetails = this.state.roomDetails
+                            var targetUserUpdated = newRoomDetails.connectedUserList.findIndex(element => element.username === data.username )
+                            newRoomDetails.connectedUserList[targetUserUpdated].ready = 1
+                            this.setState({roomDetails: newRoomDetails})
+                        } else {
+                            if(data.event === 'not ready'){
+                                var newRoomDetails = this.state.roomDetails
+                                var targetUserUpdated = newRoomDetails.connectedUserList.findIndex(element => element.username === data.username )
+                                newRoomDetails.connectedUserList[targetUserUpdated].ready = 0
+                                this.setState({roomDetails: newRoomDetails})
+                            } else {
+                                if (data.event === 'connect') {
+                                    var newRoomDetails = this.state.roomDetails
+                                    var userAlreadyInList = newRoomDetails.connectedUserList.findIndex(element => element.username === data.username )
+                                    if (userAlreadyInList < 0) {
+                                        var connectedUserArray = {
+                                            'rating': 0,
+                                            'username': data.username,
+                                            'ready': 0
+                                        }
+                                        newRoomDetails.connectedUserList.push(connectedUserArray)
+                                        this.setState({roomDetails: newRoomDetails})
+                                    }
+                                } else {
+                                    if (data.event === 'disconnect') {
+                                        if (data.actor !=  this.Cookies.get('username') & data.username === this.Cookies.get('username')){
+                                            window.location.replace('/lobby')
+                                        } else {
+                                            var newRoomDetails = this.state.roomDetails
+                                            var disconnectedUserIndex = newRoomDetails.connectedUserList.findIndex(element => element.username === data.username )
+                                            if (disconnectedUserIndex > 0){
+                                                newRoomDetails.connectedUserList.splice(disconnectedUserIndex, 1)
+                                                this.setState({ roomDetails: newRoomDetails})
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         });
 
         roomSocket.on("exit_room", (data) => {
             if(data.username === 0 || data.username === this.Cookies.get('username')){
-                console.log(data.username + ' vs ' + this.Cookies.get('username'))
                 this.setState({nextUrl: '/lobby'})
             } else {
                 this.GetRoomDetails()
@@ -200,10 +256,7 @@ export default class Room extends React.Component{
                 var userConnected = this.state.roomDetails.connectedUserList.findIndex(element => element.username === this.Cookies.get('username') )
                 if (userConnected >=0){
                     this.setState({nextUrl: '/game/' + data.gameId})
-                } else {
-                    this.GetRoomDetails()
                 }
-                
             }
         });
 
