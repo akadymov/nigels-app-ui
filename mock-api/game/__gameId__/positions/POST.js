@@ -5,24 +5,25 @@ module.exports = (req, res) => {
     const errors = [];
   
     if (token === 'badToken' || !token) {
-      return res.status(401).json({
-        field:"token",
+      errors.push({
         message:"Unauthorized!"
       })
     }
   
     if (token === 'nonHostToken') {
-      return res.status(401).json({
-        field:"token",
+      errors.push({
         message:"Only host can shuffle positions!"
       })
     }
   
     if (![1,2,3].includes(gameId)) {
       errors.push({
-        field:"roomId",
         message:"Game #" & gameId & " is not started yet!"
       });
+    }
+
+    if(errors.length>0) {
+      return res.status(400).json({errors})
     }
 
     return res.status(201).json({

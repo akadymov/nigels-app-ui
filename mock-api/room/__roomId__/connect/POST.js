@@ -2,28 +2,28 @@ module.exports = (req, res) => {
     const token = req.body.token;
     const roomId = req.params.roomId;
 
-    var error = null;
+    var errors = null;
   
     if (token === 'badToken') {
-      return res.status(401).json({
-        errors:{message:"Unauthorized!"}
+      errors.push({
+        message:"Unauthorized!"
       })
     }
   
     if (parseInt(roomId) > 4) {
-      error = "Room with specified id does not exist!"
+      errors = "Room with specified id does not exist!"
     }
   
     if (roomId === "1") {
-      error="You are already connected to specified room!"
+      errors="You are already connected to specified room!"
     }
   
     if (roomId === "2") {
-      error = "Room with specified id is full!"
+      errors = "Room with specified id is full!"
     }
 
-    if(error) {
-      return res.status(403).json({errors:{message: error}})
+    if(errors) {
+      return res.status(403).json({errors:{message: errors}})
     }
   
     return res.status(200).json({

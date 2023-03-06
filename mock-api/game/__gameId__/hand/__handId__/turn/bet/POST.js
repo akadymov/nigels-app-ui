@@ -6,27 +6,8 @@ module.exports = (req, res) => {
 
     const errors = [];
 
-    const playerGamePairs = [
-        {
-            'gameId': 4,
-            'playerToken': 'ryabina'
-        },
-        {
-            'gameId': 4,
-            'playerToken': 'koshasa'
-        },
-        {
-            'gameId': 5,
-            'playerToken': 'akadymov'
-        },
-        {
-            'gameId': 5,
-            'playerToken': 'gsukhy'
-        },
-        {
-            'gameId': 5,
-            'playerToken': 'gigaloff'
-        },
+    const restrictedBetSizes = [
+      5,6
     ]
 
     const openHands = [
@@ -35,44 +16,60 @@ module.exports = (req, res) => {
 
     const participatingUserTokens = [
         'ryabinaToken',
-        'koshasaToken'
+        'koshasaToken',
+        'akulaToken',
+        'promoklaToken'
+    ]
+
+    const madeBetPlayerTokens = [
+        'akulaToken',
+        'promoklaToken'
     ]
   
     if (token === 'badToken' || !token) {
-      return res.status(401).json({
-        field:"token",
+      errors.push({
         message:"Unauthorized!"
       })
     }
   
     if (!betSize) {
-      return res.status(401).json({
-        field:"token",
+      errors.push({
         message:"No bet size in request!"
-      })
+      }) 
     }
   
-    if (!participatingUserTokens.includes(token)){
-        'gameId': gameId,
-        'playerToken': token
-    })) {
+    if (!participatingUserTokens.includes(token)) {
       errors.push({
-        field:"roomId",
-        message:"User {username} is not participating in game " & gameId & "!"
-      });
+        message:"User {username} is not participating in game " & gameId
+      }) 
     }
   
     if (!openHands.includes(handId)) {
       errors.push({
-        field:"roomId",
         message:"Hand " & handId & " is closed or does not exist!"
       });
+    }
+  
+    if (madeBetPlayerTokens.includes(token)) {
+      errors.push({
+        message:"User {username} is not participating in game " & gameId
+      })
+    }
+  
+    if (restrictedBetSizes.includes(betSize)) {
+      errors.push({
+          message:"Someone should stay unhappy! Change your bet size since you are last betting player in hand."
+        }) 
+    }
+
+    if(errors.length>0) {
+      return res.status(400).json({errors})
     }
 
     return res.status(201).json({
         "dealtCardsPerPlayer": 10,
-        "gameId": 26,
-        "handId": 22,
+        "gameId": gameId,
+        "handId": handId,
         "startingPlayer": "koshasa",
         "trump": "d"
     });
