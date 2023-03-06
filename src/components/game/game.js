@@ -92,7 +92,6 @@ export default class Game extends React.Component{
                             this.setState({gameDetails: newGameDetails})
                         }
                     });
-
                     // get cards on my hand
                     var playerIndex = this.state.gameDetails.players.findIndex(element => element.username === this.Cookies.get('username') )
                     if(playerIndex>=0 && this.state.gameDetails.currentHandId){
@@ -126,7 +125,6 @@ export default class Game extends React.Component{
                 })
             } else{
                 gameSocket.emit('deal_cards', this.props.match.params.gameId)
-                console.log('deal_cards')
                 this.GetGameStatus();
             }
         });
@@ -211,8 +209,12 @@ export default class Game extends React.Component{
                         error: true
                     })
                 } else {
-                    gameSocket.emit('deal_cards', this.props.match.params.gameId)
-                    console.log('deal_cards')
+                    gameSocket.emit(
+                        'next_turn', 
+                        this.props.match.params.gameId,
+                        this.state.gameDetails.currentHandId,
+                        this.Cookies.get('username')
+                    )
                     this.GetGameStatus();
                 }
             })
@@ -233,10 +235,21 @@ export default class Game extends React.Component{
     
     componentWillMount = () => {
         this.GetGameStatus();
-      }
+    }
+
+    componentDidUpdate = () => {
+        if(this.state.handDetails.cardsOnTable.length === this.state.gameDetails.players.length){
+            console.log(this.state.handDetails)
+            var newHandDetails = this.state.handDetails
+            setTimeout(function(){
+                newHandDetails.cardsOnTable = []
+                this.setState({ handDetails: newHandDetails })
+            }.bind(this), 3000)
+        }
+    }
+
 
     render() {
-        console.log(this.state.gameDetails)
 
         this.CheckIfAlreadyLoggedIn();
 
@@ -262,7 +275,6 @@ export default class Game extends React.Component{
                                     if (betPlayerIndex >= 0) {
                                         handDetailsNew.players[betPlayerIndex].betSize = data.betSize
                                         handDetailsNew.nextActingPlayer = data.actor
-                                        console.log(handDetailsNew)
                                         this.setState({ handDetails: handDetailsNew })
                                     }
                                 }
