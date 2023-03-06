@@ -8,7 +8,6 @@ import OpenCard from '../open-card';
 import ClosedCards from '../closed-cards';
 import FormButton from '../form-button';
 import ActiveFrame from '../active-frame';
-import InfoPopup from '../info-popup';
 import PlayerInfo from '../player-info';
 import BetSizePopup from '../betsize-popup';
 import { roomSocket, gameSocket } from '../../services/socket';
@@ -20,6 +19,8 @@ export default class Game extends React.Component{
         this.handleBetChange = this.handleBetChange.bind(this);
         this.selectCard = this.selectCard.bind(this);
         this.state = {
+            actionMessage: '',
+            error: false,
             gameDetails: {
                 players:[],
                 canDeal: false,
@@ -32,7 +33,6 @@ export default class Game extends React.Component{
                 betSize: null,
                 tookBets: null,
                 cardsOnHand: null,
-                actionMessage: '',
                 dealer: false
             },
             myPosition: 0,
@@ -63,15 +63,21 @@ export default class Game extends React.Component{
         this.NaegelsApi.getGame(this.props.match.params.gameId)
         .then((body) => {
             if(body.errors) {
-                this.setState({ popupError: body.errors[0].message })
+                this.setState({
+                    actionMessage: body.errors[0].message,
+                    error: true
+                })
             } else {
                 this.setState({gameDetails: body})
                 if(this.state.gameDetails.currentHandId) {
                     // get inhand players data
-                    this.NaegelsApi.getHand(this.state.gameDetails.gameId, this.state.gameDetails.currentHandId)
+                    this.NaegelsApi.getHand(this.state.gameDetails.gameId, this.state.gameDetails.currentHandId, this.Cookies.get('idToken'))
                     .then((body) => {
                         if(body.errors) {
-                            this.setState({ popupError: body.errors[0].message })
+                            this.setState({
+                                actionMessage: body.errors[0].message,
+                                error: true
+                            })
                         } else {
                             this.setState({handDetails: body})
                             var newGameDetails = this.state.gameDetails
@@ -86,14 +92,16 @@ export default class Game extends React.Component{
                             this.setState({gameDetails: newGameDetails})
                         }
                     });
-
                     // get cards on my hand
                     var playerIndex = this.state.gameDetails.players.findIndex(element => element.username === this.Cookies.get('username') )
                     if(playerIndex>=0 && this.state.gameDetails.currentHandId){
                         this.NaegelsApi.getCards(this.Cookies.get('idToken'), this.state.gameDetails.gameId, this.state.gameDetails.currentHandId)
                         .then((body) => {
                             if(body.errors) {
-                                this.setState({ popupError: body.errors[0].message })
+                                this.setState({
+                                    actionMessage: body.errors[0].message,
+                                    error: true
+                                })
                             } else {
                                 this.setState({
                                     cardsInHand: body.cardsInHand,
@@ -112,7 +120,8 @@ export default class Game extends React.Component{
         .then((body) => {
             if(body.errors) {
                 this.setState({
-                    popupError : body.errors[0].message
+                    actionMessage: body.errors[0].message,
+                    error: true
                 })
             } else{
                 gameSocket.emit('deal_cards', this.props.match.params.gameId)
@@ -126,10 +135,36 @@ export default class Game extends React.Component{
         .then((body) => {
             if(body.errors) {
                 this.setState({
-                    popupError : body.errors[0].message
+                    actionMessage: body.errors[0].message,
+                    error: true
                 })
             } else{
-                this.GetGameStatus();
+                gameSocket.emit(
+                    'make_bet', 
+                    this.props.match.params.gameId,
+                    this.state.gameDetails.currentHandId, 
+                    this.Cookies.get('username'), 
+                    parseInt(this.state.myBetSizeValue,10),
+                    body.nextPlayerToBet
+                )
+                if(body.nextPlayerToBet) {
+                    var myInhandInfoNew = this.state.myInhandInfo
+                    myInhandInfoNew.betSize = parseInt(this.state.myBetSizeValue,10)
+                    var handDetailsNew = this.state.handDetails
+                    handDetailsNew.nextActingPlayer = body.nextPlayerToBet
+                    this.setState({ 
+                        myInhandInfoNew: myInhandInfoNew,
+                        handDetails: handDetailsNew 
+                    })    
+                } else {
+                    gameSocket.emit(
+                        'next_turn',
+                        this.props.match.params.gameId,
+                        this.state.gameDetails.currentHandId, 
+                        this.Cookies.get('username')
+                    )
+                    this.GetGameStatus();
+                }
             }
         });
     };
@@ -138,10 +173,18 @@ export default class Game extends React.Component{
         this.NaegelsApi.definePositions(this.props.match.params.gameId, this.Cookies.get('idToken'))
         .then((body) => {
             if(body.errors) {
-                this.setState({ popupError: body.errors[0].message })
+                var newGameDetails = this.state.gameDetails
+                newGameDetails.actionMessage = body.errors[0].message
+                this.setState({
+                    gameDetails: newGameDetails
+                })
             } else {
-                gameSocket.emit('define_positions', this.props.match.params.gameId)
-                this.GetGameStatus();
+                gameSocket.emit('define_positions', this.props.match.params.gameId, body.players)
+                var newGameDetails = this.state.gameDetails
+                newGameDetails.positionsDefined = true
+                newGameDetails.canDeal = true
+                newGameDetails.players = body.players
+                this.setState({ gameDetails: newGameDetails })
             }
         });
     };
@@ -153,7 +196,6 @@ export default class Game extends React.Component{
                 selectedCard: cardId
             })
         } else {
-            console.log('Putting card ' + cardId)
             this.NaegelsApi.putCard(
                 this.Cookies.get('idToken'),
                 this.state.gameDetails.gameId,
@@ -162,12 +204,20 @@ export default class Game extends React.Component{
             )
             .then((body) => {
                 if(body.errors) {
-                    this.setState({ popupError: body.errors[0].message })
+                    this.setState({
+                        actionMessage: body.errors[0].message,
+                        error: true
+                    })
                 } else {
+                    gameSocket.emit(
+                        'next_turn', 
+                        this.props.match.params.gameId,
+                        this.state.gameDetails.currentHandId,
+                        this.Cookies.get('username')
+                    )
                     this.GetGameStatus();
                 }
             })
-            this.GetGameStatus();
         }
     }
 
@@ -185,25 +235,67 @@ export default class Game extends React.Component{
     
     componentWillMount = () => {
         this.GetGameStatus();
-      }
+    }
+
+    componentDidUpdate = () => {
+        if(this.state.handDetails.cardsOnTable.length === this.state.gameDetails.players.length){
+            console.log(this.state.handDetails)
+            var newHandDetails = this.state.handDetails
+            setTimeout(function(){
+                newHandDetails.cardsOnTable = []
+                this.setState({ handDetails: newHandDetails })
+            }.bind(this), 3000)
+        }
+    }
+
 
     render() {
 
         this.CheckIfAlreadyLoggedIn();
 
         gameSocket.on('refresh_game_table', (data) => {
-            if(data.username != this.Cookies.get('username')){
-                this.GetGameStatus()
+            if(parseInt(data.gameId) === parseInt(this.props.match.params.gameId)){
+                if(data.actor != this.Cookies.get('username')){
+                    if(data.event === 'define positions'){
+                        var newGameDetails = this.state.gameDetails
+                        newGameDetails.players = data.players
+                        newGameDetails.positionsDefined = true
+                        newGameDetails.canDeal = true
+                        this.setState({ gameDetails: newGameDetails })
+                    } else {
+                        if(data.event === 'deal cards'){
+                            this.GetGameStatus(); // TODO replace whole page refreshing to socket transfer of updated data only
+                        } else {
+                            if(data.event === 'make bet'){
+                                if(data.nextPlayerToBet === this.Cookies.get('username')){
+                                    this.GetGameStatus();
+                                } else {
+                                    var handDetailsNew = this.state.handDetails
+                                    var betPlayerIndex = handDetailsNew.players.findIndex(element => element.username === data.actor)
+                                    if (betPlayerIndex >= 0) {
+                                        handDetailsNew.players[betPlayerIndex].betSize = data.betSize
+                                        handDetailsNew.nextActingPlayer = data.actor
+                                        this.setState({ handDetails: handDetailsNew })
+                                    }
+                                }
+                            } else {
+                                if (data.event === 'next turn'){
+                                    this.GetGameStatus()
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
 
         roomSocket.on("exit_room", (data) => {
-            window.location.replace('/lobby')
+            if(parseInt(data.gameId) === parseInt(this.props.match.params.gameId)){
+                window.location.replace('/lobby')
+            }
         });
 
         const userConnected = this.state.gameDetails.players.findIndex(element => element.username === this.Cookies.get('username') ) >= 0
-
-        console.log('User is connected to game:' + userConnected)
 
         return (
             <div>
@@ -265,19 +357,17 @@ export default class Game extends React.Component{
                         </div>
                     </div>
                     <div className="game-table">
-                        {this.state.handDetails.cardsOnTable.map(cardOnTable => {
-                            if(cardOnTable.owner === this.state.myInhandInfo.username) {
+                        {this.state.handDetails.cardsOnTable.map((cardOnTable, cardIndex) => {
                                 return(
                                     <OpenCard
-                                        cardId={'card-' + cardOnTable.cardId}
+                                        cardId={'card-' + cardOnTable}
                                         cardOnTable="1"
-                                        index={4}
+                                        index={cardIndex + 1}
                                     ></OpenCard>
                                 )
-                            }
                         })}
                         <div className="action-info">
-                            <p className="action-info-message" error={this.state.popupError !== ''}>{this.state.handDetails.actionMessage}</p>
+                            <p className="action-info-message" error={this.state.error ? 'true' : 'false'}>{this.state.actionMessage}</p>
                         </div>
                         {this.state.handDetails.players.map(player => {
                             var position = player.position - this.state.myPosition
@@ -352,12 +442,6 @@ export default class Game extends React.Component{
                         : ''}
                     </div>
                 </ActiveFrame>
-                {this.state.popupError !== '' ? 
-                    <InfoPopup
-                        popupError={this.state.popupError}
-                        clearErrorMessage={this.clearErrorMessage}
-                    ></InfoPopup>
-                : ''}
             </div>
             
         )

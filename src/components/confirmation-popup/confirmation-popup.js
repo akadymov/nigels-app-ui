@@ -9,6 +9,8 @@ export default class ConfirmationPopup extends React.Component{
     render() {
         return (
             <div className="info-popup">
+
+            <div className="popup-container">
                 <p className="error-message">{this.props.confirmActionMsg}</p>
                 <div className="confirm-action-cancel-div">
                     <FormButton
@@ -17,7 +19,7 @@ export default class ConfirmationPopup extends React.Component{
                         onClick={this.props.clearErrorMessage}
                     >
                     </FormButton>
-                </div>
+            </div>
                 <div className="confirm-action-ok-div">
                     <FormButton
                         type="submit"
@@ -25,6 +27,8 @@ export default class ConfirmationPopup extends React.Component{
                         onClick={this.props.confirmAction}
                     >
                     </FormButton>
+                </div>
+
                 </div>
             </div>
         )

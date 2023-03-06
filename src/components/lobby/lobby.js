@@ -51,7 +51,6 @@ export default class Lobby extends React.Component{
                     newRooms.push(r)
                 });
                 this.setState({rooms: newRooms})
-                console.log(newRooms)
             }
         });
     };
@@ -62,9 +61,12 @@ export default class Lobby extends React.Component{
         this.NaegelsApi.connectRoom(this.Cookies.get('idToken'), roomId)
         .then((body) => {
             if(!body.errors){
-                console.log(this.Cookies.get('username') & ' connecting to Room #' & roomId);
-                roomSocket.emit('connect_to_room', this.Cookies.get('username'), roomId)
-                window.location.replace('/lobby/room/' + roomId)
+                roomSocket.emit('add_player_to_room', this.Cookies.get('username'), roomId, body.roomName, body.connectedUsers)
+                lobbySocket.emit('increase_room_players', this.Cookies.get('username'), roomId, body.roomName, body.connectedUsers)
+                console.log('connect_to_room')
+                setTimeout(function(){
+                    window.location.replace('/lobby/room/' + roomId)
+                }, 1000)
             } else {
                 this.setState({popupError: body.errors[0].message})
             }
@@ -83,9 +85,8 @@ export default class Lobby extends React.Component{
     handleCreateRoomError=(body) => {
         this.setState({newRoomError: body.errors[0].message});
     }
-
+    
     handleKeyPress = (event) => {
-        console.log(event)
         if (event.key === 'Enter') {
           this.createNewRoom();
         }
@@ -97,8 +98,8 @@ export default class Lobby extends React.Component{
             if(body.errors) {
                 this.handleCreateRoomError(body)
             } else {
-                console.log('Creating room ' & this.state.newRoomName & '...');
-                lobbySocket.emit('create_room', this.state.newRoomName, body.roomId)
+                lobbySocket.emit('create_room', body.roomId, body.roomName, body.host, body.created)
+                console.log('create_room')
                 window.location.replace('/lobby/room/' + body.roomId);
             }
         })
@@ -120,9 +121,43 @@ export default class Lobby extends React.Component{
 
         this.CheckIfAlreadyLoggedIn();
 
-        lobbySocket.on('update_lobby', () => {
-            console.log('Updating lobby...')
-            this.GetRoomsList()
+        lobbySocket.on('update_lobby', (data) => {
+            if(data.event === 'close'){
+                var newRooms = this.state.rooms
+                var createdRoomIndex = newRooms.findIndex(element => element.roomName === data.roomName )
+                if (createdRoomIndex >= 0) {
+                    newRooms.splice(createdRoomIndex, 1)
+                    this.setState({rooms: newRooms})
+                }
+            } else {
+                if(data.event === 'create'){
+                    var roomIsAlreadyDisplayed = this.state.rooms.findIndex(element => element.roomName === data.roomName )
+                    if (roomIsAlreadyDisplayed < 0) {
+                        var newRooms = this.state.rooms
+                        newRooms.push({
+                            'closed': null,
+                            'connectedUsers': 1,
+                            'created': data.created,
+                            'games': [],
+                            'host': data.host,
+                            'roomId': data.roomId,
+                            'roomName': data.roomName,
+                            'status': 'open'
+                        })
+                        this.setState({rooms: newRooms})
+                    }
+                    
+                } else {
+                    if(data.event === 'connect' || data.event === 'disconnect') {
+                        var newRooms = this.state.rooms
+                        console.log(newRooms)
+                        console.log(data)
+                        var updatedRoomIndex = newRooms.findIndex(element => element.roomName === data.roomName )
+                        newRooms[updatedRoomIndex].connectedUsers = data.connectedUsers
+                        this.setState({ rooms: newRooms })
+                    }
+                }
+            }
         })
         
         return (

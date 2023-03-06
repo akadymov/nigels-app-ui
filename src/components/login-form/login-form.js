@@ -50,10 +50,8 @@ export default class LoginForm extends React.Component{
         )
         .then((body) => {
             if(body.errors) {
-                console.log('Login error')
                 this.handleErrorResponse(body)
             } else {
-                console.log('login error')
                 var currentDate = new Date(); 
                 var expiresIn = new Date(currentDate.getTime() + body.expiresIn * 1000)
                 this.Cookies.set('idToken', body.token, { path: '/' , expires: expiresIn})
@@ -70,7 +68,6 @@ export default class LoginForm extends React.Component{
     handlePasswordChange=(e) => {
         this.setState({password: e.target.value})
     };
-
     
     handleErrorResponse(body) {
         let textFieldsListUpdated = [...this.state.textFieldsList]
@@ -82,17 +79,16 @@ export default class LoginForm extends React.Component{
             textFieldsListUpdated[elementsIndex] = {...textFieldsListUpdated[elementsIndex], errorMessage: er.message}
         });
         this.setState({textFieldsList: textFieldsListUpdated});
-    }
+    };
 
     clearErrorMessage=(e) => {
         let textFieldsListUpdated = [...this.state.textFieldsList]
         var elementsIndex = this.state.textFieldsList.findIndex(element => element.id === e.target.id )
         textFieldsListUpdated[elementsIndex] = {...textFieldsListUpdated[elementsIndex], errorMessage: ""}
         this.setState({textFieldsList: textFieldsListUpdated});
-    }
+    };
 
     handleKeyPress = (event) => {
-        console.log(event)
         if (event.key === 'Enter') {
           this.SendLoginRequest();
         }

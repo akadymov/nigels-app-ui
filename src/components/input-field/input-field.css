@@ -92,35 +92,40 @@
     position: absolute;
 }
 .input-field:focus{
-    border: 1px solid #308552;
+    border: 2px solid #308552;
     color: black;
     outline: none !important;
 }
 
-.input-field[error]:not(:focus){
+.input-field.error{
     border: 1px solid #FF0000;
     color: #FF0000;
     /*filter: invert(22%) sepia(94%) saturate(7408%) hue-rotate(358deg) brightness(120%) contrast(115%);*/
 }
 
-.input-field[error][id*=password]:not(:focus){
+.input-field.error[id*=password]:not(:focus){
     background-image: url(./lock-outlined-error.png);
 }
 
-.input-field[error][id*=email]:not(:focus){
+.input-field.error[id*=repeatPassword]:not(:focus){
+    background-image: url(./lock-outlined-error.png);
+}
+
+.input-field.error[id*=email]:not(:focus){
     background-image: url(./email-outlined-error.png);
 }
 
-.input-field[error][id*=username]:not(:focus){
+.input-field.error[id*=username]:not(:focus){
     background-image: url(./user-outlined-error.png);
 }
 
-.input-field[error]::-webkit-input-placeholder{
+.input-field.error::-webkit-input-placeholder{
     color: #FF0000;
 }
 
 .error-div{
-    text-align: right;
+    text-align: center;
+    left: 10px;
     width: 100%;
     font-size: 12px;
     color: #FF0000;

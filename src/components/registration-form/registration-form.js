@@ -94,7 +94,6 @@ export default class RegistrationForm extends React.Component{
     }
 
     handleKeyPress = (event) => {
-        console.log(event)
         if (event.key === 'Enter') {
           this.SendRegRequest();
         }

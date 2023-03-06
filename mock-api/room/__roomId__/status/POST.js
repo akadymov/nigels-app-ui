@@ -4,7 +4,7 @@ module.exports = (req, res) => {
 
     const errors = [];
   
-    if (token === 'badToken') {
+    if (token === 'badToken' || !token) {
       return res.status(401).json({
         field:"token",
         message:"Unauthorized!"
@@ -45,6 +45,12 @@ module.exports = (req, res) => {
         ],
         "created": "Wed, 01 Jul 2020 21:20:41 GMT",
         "host": "akadymov",
+        "games": [
+          {
+            "id": 25,
+            "status": "finished"
+          }
+        ],
         "roomId": roomId,
         "roomName": "Тюкалинские бандиты",
         "status": "open"
