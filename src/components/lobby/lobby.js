@@ -125,7 +125,7 @@ export default class Lobby extends React.Component{
             if(data.event === 'close'){
                 var newRooms = this.state.rooms
                 var createdRoomIndex = newRooms.findIndex(element => element.roomName === data.roomName )
-                if (createdRoomIndex > 0) {
+                if (createdRoomIndex >= 0) {
                     newRooms.splice(createdRoomIndex, 1)
                     this.setState({rooms: newRooms})
                 }

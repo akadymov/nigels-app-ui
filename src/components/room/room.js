@@ -97,7 +97,7 @@ export default class Room extends React.Component{
                 } else {
                     var newRoomDetails = this.state.roomDetails
                     var disconnectedUserIndex = newRoomDetails.connectedUserList.findIndex(element => element.username === username )
-                    if (disconnectedUserIndex > 0){
+                    if (disconnectedUserIndex >= 0){
                         newRoomDetails.connectedUserList.splice(disconnectedUserIndex,1)
                         this.setState({ roomDetails: newRoomDetails })
                     }
@@ -229,7 +229,7 @@ export default class Room extends React.Component{
                                         } else {
                                             var newRoomDetails = this.state.roomDetails
                                             var disconnectedUserIndex = newRoomDetails.connectedUserList.findIndex(element => element.username === data.username )
-                                            if (disconnectedUserIndex > 0){
+                                            if (disconnectedUserIndex >= 0){
                                                 newRoomDetails.connectedUserList.splice(disconnectedUserIndex, 1)
                                                 this.setState({ roomDetails: newRoomDetails})
                                             }

@@ -141,9 +141,32 @@ export default class Game extends React.Component{
                     error: true
                 })
             } else{
-                gameSocket.emit('deal_cards', this.props.match.params.gameId)
-                console.log('deal_cards')
-                this.GetGameStatus();
+                gameSocket.emit(
+                    'make_bet', 
+                    this.props.match.params.gameId,
+                    this.state.gameDetails.currentHandId, 
+                    this.Cookies.get('username'), 
+                    parseInt(this.state.myBetSizeValue,10),
+                    body.nextPlayerToBet
+                )
+                if(body.nextPlayerToBet) {
+                    var myInhandInfoNew = this.state.myInhandInfo
+                    myInhandInfoNew.betSize = parseInt(this.state.myBetSizeValue,10)
+                    var handDetailsNew = this.state.handDetails
+                    handDetailsNew.nextActingPlayer = body.nextPlayerToBet
+                    this.setState({ 
+                        myInhandInfoNew: myInhandInfoNew,
+                        handDetails: handDetailsNew 
+                    })    
+                } else {
+                    gameSocket.emit(
+                        'next_turn',
+                        this.props.match.params.gameId,
+                        this.state.gameDetails.currentHandId, 
+                        this.Cookies.get('username')
+                    )
+                    this.GetGameStatus();
+                }
             }
         });
     };
@@ -219,7 +242,7 @@ export default class Game extends React.Component{
 
         gameSocket.on('refresh_game_table', (data) => {
             if(parseInt(data.gameId) === parseInt(this.props.match.params.gameId)){
-                if(data.username != this.Cookies.get('username')){
+                if(data.actor != this.Cookies.get('username')){
                     if(data.event === 'define positions'){
                         var newGameDetails = this.state.gameDetails
                         newGameDetails.players = data.players
@@ -228,7 +251,26 @@ export default class Game extends React.Component{
                         this.setState({ gameDetails: newGameDetails })
                     } else {
                         if(data.event === 'deal cards'){
-                            this.GetGameStatus();
+                            this.GetGameStatus(); // TODO replace whole page refreshing to socket transfer of updated data only
+                        } else {
+                            if(data.event === 'make bet'){
+                                if(data.nextPlayerToBet === this.Cookies.get('username')){
+                                    this.GetGameStatus();
+                                } else {
+                                    var handDetailsNew = this.state.handDetails
+                                    var betPlayerIndex = handDetailsNew.players.findIndex(element => element.username === data.actor)
+                                    if (betPlayerIndex >= 0) {
+                                        handDetailsNew.players[betPlayerIndex].betSize = data.betSize
+                                        handDetailsNew.nextActingPlayer = data.actor
+                                        console.log(handDetailsNew)
+                                        this.setState({ handDetails: handDetailsNew })
+                                    }
+                                }
+                            } else {
+                                if (data.event === 'next turn'){
+                                    this.GetGameStatus()
+                                }
+                            }
                         }
                     }
                 }
