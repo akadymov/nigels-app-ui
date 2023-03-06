@@ -4,7 +4,7 @@ module.exports = (req, res) => {
 
     const errors = [];
   
-    if (token === 'badToken') {
+    if (token === 'badToken' || !token) {
       return res.status(401).json({
         field:"token",
         message:"Unauthorized!"

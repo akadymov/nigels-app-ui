@@ -1,9 +1,9 @@
 module.exports = (req, res) =>
   res.status(200).json({
+    aboutMe: null,
     email: "some@email.com",
-    username: req.params.username,
     lastSeen: Date.now(),
-    registered: Date.now(),
     preferredLang: "en",
-    aboutMe: null
+    registered: Date.now(),
+    username: req.params.username
   });

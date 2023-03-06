@@ -3,11 +3,45 @@ module.exports = (req, res) => {
     const password = req.body.password;
 
     const errors = [];
+
+    const allowedLoginPairs = [
+      {
+        'username': 'ryabina',
+        'password': 'Ryabina'
+      },
+      {
+        'username': 'koshasa',
+        'password': 'time2eat'
+      },
+      {
+        'username': 'promokla',
+        'password': 'kometa'
+      },
+      {
+        'username': 'akadymov',
+        'password': 'akulaMatata'
+      },
+      {
+        'username': 'gsukhy',
+        'password': 'bratishka'
+      },
+      {
+        'username': 'kuznets',
+        'password': 'bandit'
+      },
+      {
+        'username': 'gigaloff',
+        'password': 'giganlimon'
+      }
+    ]
   
-    if (username !== 'akadymov' || password.length < 5) {
+    if (allowedLoginPairs.includes({
+      'username': username,
+      'password': password
+    })) {
       errors.push({
         field:"username",
-        message:"Invalid username or password"
+        message:"   "
       });
       errors.push({
         field:"password",

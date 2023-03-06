@@ -8,16 +8,28 @@ module.exports = (req, res) => {
       lang = req.body.preferredLang
     }
 
+    const existingLogins = [
+      'gsukhy',
+      'akadymov',
+      'kuznets',
+      'gigaloff'
+    ]
+
+    const existingEmails = [
+      'gsukhy@gmail.com',
+      'akhmed.kadymov@gmail.com'
+    ]
+
     const errors = [];
   
-    if (userEmail === 'gsukhy@gmail.com') {
+    if (existingEmails.includes(userEmail)) {
       errors.push({
         field:"email",
         message:"Email " + userEmail + " is unavailable!"
       });
     };
   
-    if (username === 'gsukhy') {
+    if (existingLogins.includes(username)) {
       errors.push({
         field:"username",
         message:"User " + username + " already exists!"
@@ -33,7 +45,7 @@ module.exports = (req, res) => {
       });
     };
 
-    if (password.length < 5) {
+    if (password.length < 6) {
       errors.push({
         field:"password",
         message:"Password does not meet security requirements!"
@@ -52,11 +64,11 @@ module.exports = (req, res) => {
     }
   
     return res.status(201).json({
+      aboutMe: null,
       email: req.body.email,
-      username: req.body.username,
       lastSeen: Date.now(),
-      registered: Date.now(),
       preferredLang: lang,
-      aboutMe: null
+      registered: Date.now(),
+      username: req.body.username
     });
   };

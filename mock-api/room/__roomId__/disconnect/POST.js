@@ -4,7 +4,7 @@ module.exports = (req, res) => {
 
     var error = null;
   
-    if (token === 'badToken') {
+    if (token === 'badToken' || !token) {
       return res.status(401).json({
         errors:{message:"Unauthorized!"}
       })

@@ -22,7 +22,7 @@
       },
       {
           "closed": null,
-          "connect": "/api/v1/room/2/connect",
+          "connect": "/api/v1/room/3/connect",
           "connectedUsers": 3,
           "created": "Thu, 25 Jun 2020 11:22:16 GMT",
           "host": "kuznets",
@@ -32,7 +32,7 @@
       },
       {
           "closed": null,
-          "connect": "/api/v1/room/2/connect",
+          "connect": "/api/v1/room/4/connect",
           "connectedUsers": 10,
           "created": "Thu, 25 Jun 2020 11:22:16 GMT",
           "host": "gsukhy",
