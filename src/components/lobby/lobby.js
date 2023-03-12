@@ -194,7 +194,7 @@ export default class Lobby extends React.Component{
                                         </td>
                                         <td className="lobby-table-cell">{room.host}</td>
                                         <td className="lobby-table-cell">{room.created}</td>
-                                        <td className="lobby-table-cell">{room.connectedUsers} / 10</td>
+                                        <td className="lobby-table-cell">{room.connectedUsers} / 6</td>
                                         <td className="lobby-table-cell">{room.status}</td>
                                         <td className="lobby-table-cell">
                                             {this.Cookies.get('username')===room.host ? 
