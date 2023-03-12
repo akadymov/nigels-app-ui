@@ -25,10 +25,10 @@ export default class PlayerInfo extends React.Component{
                     </div>
                     <div className="player-took-bets" active={this.props.active ? 'true' : 'false'}>
                         <p className="player-prop-header">
-                            Took bets
+                            Took turns
                         </p>
                         <p className="player-prop-value">
-                            {this.props.tookBets}
+                            {this.props.tookTurns}
                         </p>
                     </div>
                 </div>

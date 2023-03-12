@@ -31,7 +31,7 @@ export default class Game extends React.Component{
             myInhandInfo: {
                 username: null,
                 betSize: null,
-                tookBets: null,
+                tookTurns: null,
                 cardsOnHand: null,
                 dealer: false
             },
@@ -85,7 +85,7 @@ export default class Game extends React.Component{
                                 var handPlayerIndex = this.state.handDetails.players.findIndex(handPlayer => handPlayer.username === player.username)
                                 var gamePlayerIndex = newGameDetails.players.findIndex(gamePlayer => gamePlayer.username === player.username)
                                 newGameDetails.players[gamePlayerIndex].betSize = this.state.handDetails.players[handPlayerIndex].betSize
-                                newGameDetails.players[gamePlayerIndex].tookBets = this.state.handDetails.players[handPlayerIndex].tookBets
+                                newGameDetails.players[gamePlayerIndex].tookTurns = this.state.handDetails.players[handPlayerIndex].tookTurns
                             });
                             const myIndex = this.state.handDetails.players.findIndex(handPlayer => handPlayer.username === this.Cookies.get('username'))
                             this.setState({myInhandInfo: this.state.handDetails.players[myIndex]})
@@ -381,7 +381,7 @@ export default class Game extends React.Component{
                                     <PlayerInfo
                                         username={player.username}
                                         betSize={player.betSize ? player.betSize : null}
-                                        tookBets={player.tookBets ? player.tookBets : null}
+                                        tookTurns={player.tookTurns >= 0 ? player.tookTurns : null}
                                         active={this.state.handDetails.nextActingPlayer === player.username}
                                     ></PlayerInfo>
                                     {player.dealer ? 
@@ -421,7 +421,7 @@ export default class Game extends React.Component{
                                 myInfo="true"
                                 username={this.Cookies.get('username')}
                                 betSize={this.state.myInhandInfo.betSize ? this.state.myInhandInfo.betSize : null}
-                                tookBets={this.state.myInhandInfo.tookBets ? this.state.myInhandInfo.tookBets : null}
+                                tookTurns={this.state.myInhandInfo.tookTurns ? this.state.myInhandInfo.tookTurns : null}
                                 active={this.state.handDetails.nextActingPlayer === this.state.myInhandInfo.username}
                             ></PlayerInfo>
                             {this.state.myInhandInfo.dealer ? 
